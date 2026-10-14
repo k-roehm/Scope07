@@ -1,0 +1,2338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STEMscopes TN Science: Day 03 Conservation of Mass & Ecosystem Cycling</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js for interactive Greenhouse graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Canvas Confetti for celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Fredoka', 'cursive', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+            sun: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            },
+            sky: {
+              50: '#f0f9ff',
+              500: '#0ea5e9',
+              600: '#0284c7',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom utility animations */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.95; }
+    }
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+    .animate-float {
+      animation: floatSlow 3.5s ease-in-out infinite;
+    }
+    .animate-pulse-soft {
+      animation: pulseSoft 2.2s ease-in-out infinite;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    /* Clean button click feel */
+    .btn-bounce:active {
+      transform: scale(0.96);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-emerald-200 selection:text-emerald-900">
+
+  <header class="bg-white/95 backdrop-blur sticky top-0 z-40 border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo & Standards -->
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 text-2xl font-black font-display">
+            🌿
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                STEMscopes TN • 7th Grade
+              </span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 hidden sm:inline-block">
+                Day 03 of Scope 7
+              </span>
+            </div>
+            <h1 class="text-lg sm:text-xl font-bold font-display text-slate-900 leading-tight">
+              Conservation of Mass & Ecosystem Cycling
+            </h1>
+          </div>
+        </div>
+
+        <!-- TN Standards Pill and Audio Toggle -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="hidden md:flex flex-col text-right">
+            <span class="text-xs font-bold text-slate-700">Standards Aligned:</span>
+            <span class="text-[11px] font-medium text-slate-500">TN 7.LS1.7 • TN 7.LS2.1</span>
+          </div>
+          <!-- Sound FX Toggle Button -->
+          <button id="soundToggleBtn" onclick="toggleSound()" class="p-2.5 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-700 transition flex items-center gap-1.5 text-xs font-bold" title="Toggle Sound FX">
+            <span id="soundIcon">🔊</span>
+            <span class="hidden sm:inline" id="soundLabel">SFX: On</span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto py-2 custom-scrollbar text-sm font-semibold border-t border-slate-100">
+        <button onclick="switchTab('slides')" id="tab-slides" class="nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-emerald-500 text-white shadow-sm shadow-emerald-500/30">
+          <span>📖</span> Lesson Slides
+        </button>
+        <button onclick="switchTab('balancer')" id="tab-balancer" class="nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+          <span>⚖️</span> Atom Accounting Lab
+        </button>
+        <button onclick="switchTab('greenhouse')" id="tab-greenhouse" class="nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+          <span>📊</span> Lena's 24h Greenhouse
+        </button>
+        <button onclick="switchTab('game')" id="tab-game" class="nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-amber-300 bg-amber-50/50">
+          <span class="text-base animate-bounce">🎮</span> Adventure Game: Carbon Odyssey
+        </button>
+        <button onclick="switchTab('remediation')" id="tab-remediation" class="nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+          <span>🌱</span> Remediation (Help)
+        </button>
+        <button onclick="switchTab('enrichment')" id="tab-enrichment" class="nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+          <span>🚀</span> Enrichment (Deep Dive)
+        </button>
+        <button onclick="switchTab('quiz')" id="tab-quiz" class="nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900">
+          <span>📝</span> Exit Ticket & CER
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+    <!-- Feedback Toast Notification Container -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-700 max-w-md">
+      <span id="toastIcon" class="text-2xl">💡</span>
+      <div>
+        <h4 id="toastTitle" class="font-bold text-sm text-white">Notice</h4>
+        <p id="toastMessage" class="text-xs text-slate-300">Message description</p>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 1: INTERACTIVE LESSON SLIDES -->
+    <!-- ========================================================================= -->
+    <section id="section-slides" class="tab-section block space-y-6">
+      <!-- Lesson Header Banner -->
+      <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 border border-emerald-100 p-6 rounded-3xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-200/60 px-3 py-1 rounded-full">
+            Scope 7 • 90-Minute Block Module
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-display mt-2">
+            Day 3: The Law of Conservation of Mass & Ecosystem Cycling
+          </h2>
+          <p class="text-slate-600 text-sm mt-1 max-w-2xl">
+            Discover how carbon, hydrogen, and oxygen atoms never vanish—they simply reassemble between plants, herbivores, fungi, and our planet's atmosphere!
+          </p>
+        </div>
+        <!-- Progress Counter -->
+        <div class="flex items-center gap-3 bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-sm self-stretch md:self-auto justify-between">
+          <div class="text-left">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Slide Progress</span>
+            <span id="slideIndicator" class="font-extrabold text-slate-800 text-sm">Slide 1 of 6</span>
+          </div>
+          <div class="flex gap-1.5">
+            <button onclick="prevSlide()" class="btn-bounce w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition">◀</button>
+            <button onclick="nextSlide()" class="btn-bounce w-9 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center justify-center transition shadow-md shadow-emerald-500/20">▶</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative bg-white border border-slate-200 rounded-3xl shadow-sm p-6 sm:p-10 min-h-[480px] flex flex-col justify-between overflow-hidden">
+        
+        <!-- Slide 1: Bellringer Sequoia Mass Mystery -->
+        <div id="slide-0" class="slide-content block transition-all duration-300">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-3 py-1 bg-amber-100 text-amber-800 font-extrabold text-xs rounded-full">Bellringer Investigation (10 Min)</span>
+            <span class="text-xs text-slate-400 font-medium">Standards: TN 7.LS1.7, 7.LS2.1</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mb-3">
+            🌲 The 1,000,000-Kilogram Sequoia Mystery
+          </h3>
+          <p class="text-slate-600 text-base leading-relaxed max-w-3xl mb-6">
+            A giant sequoia tree starts out as a tiny seed weighing <span class="font-bold text-slate-800 underline decoration-amber-400">less than 1 gram</span>. When fully grown, it can weigh over <strong>1,000,000 kilograms</strong> (more than 2.2 million pounds!). 
+            <br><span class="font-semibold text-emerald-800">Where does the vast majority of the tree's physical mass (matter) actually come from?</span>
+          </p>
+
+          <!-- Interactive Click Poll -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mb-6">
+            <button onclick="answerBellringer('soil')" id="btn-soil" class="btn-bounce p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 text-left transition flex items-center gap-3 group">
+              <span class="w-10 h-10 rounded-xl bg-stone-100 text-stone-700 font-bold flex items-center justify-center text-lg group-hover:scale-110 transition">🌱</span>
+              <div>
+                <span class="font-bold text-slate-800 block text-sm">Option A: Soil & Minerals</span>
+                <span class="text-xs text-slate-500">Absorbed deep through the tree roots</span>
+              </div>
+            </button>
+            <button onclick="answerBellringer('water')" id="btn-water" class="btn-bounce p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 text-left transition flex items-center gap-3 group">
+              <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-lg group-hover:scale-110 transition">💧</span>
+              <div>
+                <span class="font-bold text-slate-800 block text-sm">Option B: Groundwater</span>
+                <span class="text-xs text-slate-500">Pumped through roots via xylem cells</span>
+              </div>
+            </button>
+            <button onclick="answerBellringer('air')" id="btn-air" class="btn-bounce p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 text-left transition flex items-center gap-3 group">
+              <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-lg group-hover:scale-110 transition">💨</span>
+              <div>
+                <span class="font-bold text-slate-800 block text-sm">Option C: Atmospheric Air (CO₂)</span>
+                <span class="text-xs text-slate-500">Pulled from air through leaf stomata</span>
+              </div>
+            </button>
+            <button onclick="answerBellringer('sun')" id="btn-sun" class="btn-bounce p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-300 text-left transition flex items-center gap-3 group">
+              <span class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 font-bold flex items-center justify-center text-lg group-hover:scale-110 transition">☀️</span>
+              <div>
+                <span class="font-bold text-slate-800 block text-sm">Option D: Pure Sunlight Rays</span>
+                <span class="text-xs text-slate-500">Radiant solar photons turning into solid matter</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Explanation Reveal Box -->
+          <div id="bellringerResult" class="hidden p-5 rounded-2xl border transition-all duration-300">
+            <!-- Dynamic Injection via JS -->
+          </div>
+        </div>
+
+        <!-- Slide 2: Law of Conservation of Mass -->
+        <div id="slide-1" class="slide-content hidden transition-all duration-300">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 font-extrabold text-xs rounded-full">Direct Instruction (Lecture Part I)</span>
+            <span class="text-xs text-slate-400 font-medium">Fundamental Chemical Principle</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mb-3">
+            ⚖️ The Law of Conservation of Mass
+          </h3>
+          <div class="bg-emerald-50/70 border-l-4 border-emerald-500 p-4 rounded-r-2xl mb-6">
+            <p class="font-bold text-emerald-950 text-base sm:text-lg">
+              "Matter cannot be created or destroyed in a chemical reaction; atoms are merely rearranged."
+            </p>
+            <p class="text-emerald-800 text-xs sm:text-sm mt-1">
+              Every single atom entering as a reactant input MUST be accounted for in the product outputs. Zero atoms disappear; zero atoms magically appear!
+            </p>
+          </div>
+
+          <!-- Chemical Equation Breakdown -->
+          <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4 text-center">
+              The Balanced Photosynthesis Formula
+            </h4>
+            <div class="flex flex-wrap items-center justify-center gap-3 text-center">
+              <!-- Reactants -->
+              <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                <span class="text-xs font-semibold text-slate-500 block">6 Molecules</span>
+                <span class="text-xl sm:text-2xl font-black text-emerald-700">6 CO₂</span>
+                <span class="text-[11px] text-slate-400 block">Carbon Dioxide</span>
+              </div>
+              <span class="text-2xl font-bold text-slate-400">+</span>
+              <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                <span class="text-xs font-semibold text-slate-500 block">6 Molecules</span>
+                <span class="text-xl sm:text-2xl font-black text-sky-600">6 H₂O</span>
+                <span class="text-[11px] text-slate-400 block">Water</span>
+              </div>
+              <span class="text-2xl font-bold text-slate-400">+</span>
+              <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-200 shadow-sm">
+                <span class="text-xs font-semibold text-amber-700 block">Energy Source</span>
+                <span class="text-lg sm:text-xl font-black text-amber-600">☀️ Light</span>
+                <span class="text-[11px] text-amber-700/80 block">Radiant Energy</span>
+              </div>
+
+              <!-- Arrow -->
+              <div class="px-2">
+                <span class="text-3xl text-emerald-600 font-extrabold animate-pulse">➔</span>
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Rearrangement</span>
+              </div>
+
+              <!-- Products -->
+              <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                <span class="text-xs font-semibold text-slate-500 block">1 Molecule</span>
+                <span class="text-xl sm:text-2xl font-black text-purple-700">C₆H₁₂O₆</span>
+                <span class="text-[11px] text-slate-400 block">Glucose Sugar</span>
+              </div>
+              <span class="text-2xl font-bold text-slate-400">+</span>
+              <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                <span class="text-xs font-semibold text-slate-500 block">6 Molecules</span>
+                <span class="text-xl sm:text-2xl font-black text-teal-600">6 O₂</span>
+                <span class="text-[11px] text-slate-400 block">Oxygen Gas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Master Atom Accounting -->
+        <div id="slide-2" class="slide-content hidden transition-all duration-300">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-3 py-1 bg-purple-100 text-purple-800 font-extrabold text-xs rounded-full">Atom Accounting (Proof)</span>
+            <span class="text-xs text-slate-400 font-medium">Mathematical Verification</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mb-2">
+            🔬 The Atom Accounting Proof
+          </h3>
+          <p class="text-slate-600 text-sm mb-4">
+            Let’s audit every single atom entering the chloroplast engine versus every single atom leaving it:
+          </p>
+
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-left border-collapse bg-white">
+              <thead>
+                <tr class="bg-slate-100/80 text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+                  <th class="p-4 border-b border-slate-200">Element</th>
+                  <th class="p-4 border-b border-slate-200">Reactants: 6CO₂ + 6H₂O</th>
+                  <th class="p-4 border-b border-slate-200">Products: C₆H₁₂O₆ + 6O₂</th>
+                  <th class="p-4 border-b border-slate-200 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-sm font-medium">
+                <tr class="hover:bg-slate-50/80 transition">
+                  <td class="p-4 font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-slate-900 inline-block shadow-sm"></span>
+                    Carbon (C)
+                  </td>
+                  <td class="p-4 text-slate-600">6 × 1 in CO₂ = <strong class="text-slate-900">6 atoms</strong></td>
+                  <td class="p-4 text-slate-600">6 in Glucose = <strong class="text-slate-900">6 atoms</strong></td>
+                  <td class="p-4 text-center">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-extrabold">6 = 6 Balanced ✓</span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/80 transition">
+                  <td class="p-4 font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-sky-200 border border-sky-400 inline-block shadow-sm"></span>
+                    Hydrogen (H)
+                  </td>
+                  <td class="p-4 text-slate-600">6 × 2 in H₂O = <strong class="text-slate-900">12 atoms</strong></td>
+                  <td class="p-4 text-slate-600">12 in Glucose = <strong class="text-slate-900">12 atoms</strong></td>
+                  <td class="p-4 text-center">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-extrabold">12 = 12 Balanced ✓</span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50/80 transition">
+                  <td class="p-4 font-bold text-slate-800 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-rose-500 inline-block shadow-sm"></span>
+                    Oxygen (O)
+                  </td>
+                  <td class="p-4 text-slate-600">(6 × 2 in CO₂) + (6 × 1 in H₂O) = <strong class="text-slate-900">18 atoms</strong></td>
+                  <td class="p-4 text-slate-600">(6 in Glucose) + (6 × 2 in O₂) = <strong class="text-slate-900">18 atoms</strong></td>
+                  <td class="p-4 text-center">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-extrabold">18 = 18 Balanced ✓</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 flex items-center gap-2 text-xs font-semibold text-emerald-800 bg-emerald-50 px-4 py-2.5 rounded-xl border border-emerald-200">
+            <span>💡</span> Key Takeaway: Total atoms before = 36 atoms. Total atoms after = 36 atoms. The Law of Conservation of Mass holds true!
+          </div>
+        </div>
+
+        <!-- Slide 4: Ecosystem Matter Cycling -->
+        <div id="slide-3" class="slide-content hidden transition-all duration-300">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-3 py-1 bg-teal-100 text-teal-800 font-extrabold text-xs rounded-full">Ecosystem Carbon Cycle</span>
+            <span class="text-xs text-slate-400 font-medium">Standard TN 7.LS2.1</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mb-2">
+            🔄 How Matter Travels Between Living and Non-Living Worlds
+          </h3>
+          <p class="text-slate-600 text-sm mb-5">
+            Matter doesn't stay locked in plants forever! Explore the three main players keeping the carbon cycle turning:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Producers -->
+            <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl relative overflow-hidden group hover:shadow-md transition">
+              <span class="text-3xl mb-2 block">🌳</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">1. Producers (Autotrophs)</span>
+              <h4 class="font-bold text-slate-900 text-base mt-1">Carbon Fixers</h4>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                Take inorganic gaseous <strong>CO₂</strong> from the air and build solid organic <strong>glucose (C₆H₁₂O₆)</strong> using sunlight. They form the base of every terrestrial food chain.
+              </p>
+            </div>
+
+            <!-- Consumers -->
+            <div class="bg-sky-50 border border-sky-200 p-5 rounded-2xl relative overflow-hidden group hover:shadow-md transition">
+              <span class="text-3xl mb-2 block">🐇</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-sky-700">2. Consumers (Heterotrophs)</span>
+              <h4 class="font-bold text-slate-900 text-base mt-1">Respiration & Release</h4>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                Eat producers to acquire glucose energy. Through <strong>cellular respiration</strong>, they use oxygen to break bonds, releasing <strong>CO₂ gas</strong> back into the air!
+              </p>
+            </div>
+
+            <!-- Decomposers -->
+            <div class="bg-amber-50 border border-amber-200 p-5 rounded-2xl relative overflow-hidden group hover:shadow-md transition">
+              <span class="text-3xl mb-2 block">🍄</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-700">3. Decomposers (Fungi & Bacteria)</span>
+              <h4 class="font-bold text-slate-900 text-base mt-1">Ecosystem Recyclers</h4>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                Break down dead leaves, wood, and organisms. They release trapped carbon back into soil and atmosphere. <strong class="text-amber-900">Without them, life would run out of CO₂!</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5: Lena's Greenhouse Experiment Introduction -->
+        <div id="slide-4" class="slide-content hidden transition-all duration-300">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 font-extrabold text-xs rounded-full">Data Analysis Task</span>
+            <span class="text-xs text-slate-400 font-medium">Real-World Closed System</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mb-2">
+            🏡 Lena's 24-Hour Greenhouse Mystery
+          </h3>
+          <p class="text-slate-600 text-sm mb-4">
+            Lena sealed an airtight greenhouse filled with healthy leafy green plants and measured atmospheric gases over a full 24-hour cycle. Look at what happened:
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div class="bg-amber-50/80 border border-amber-200 p-4 rounded-2xl">
+              <div class="flex items-center gap-2 text-amber-900 font-bold text-sm mb-2">
+                <span>☀️</span> Daytime (06:00 – 18:00)
+              </div>
+              <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+                <li><strong>CO₂ dropped:</strong> 420 ppm down to 290 ppm (absorbed for glucose).</li>
+                <li><strong>O₂ climbed:</strong> 20.9% up to 21.6% (released by split water molecules).</li>
+                <li><strong>Rate:</strong> Peak photosynthetic rate occurred around noon!</li>
+              </ul>
+            </div>
+            <div class="bg-indigo-50/80 border border-indigo-200 p-4 rounded-2xl">
+              <div class="flex items-center gap-2 text-indigo-900 font-bold text-sm mb-2">
+                <span>🌙</span> Nighttime (18:00 – 24:00)
+              </div>
+              <ul class="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
+                <li><strong>Photosynthesis halted:</strong> Zero radiant sunlight available.</li>
+                <li><strong>Respiration dominates:</strong> Plants consume O₂ and release CO₂.</li>
+                <li><strong>CO₂ climbed:</strong> 290 ppm rose back to 360 ppm.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="text-center">
+            <button onclick="switchTab('greenhouse')" class="btn-bounce inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-500/20 transition">
+              <span>📊 Open Interactive 24-Hour Greenhouse Simulator</span> ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- Slide 6: Historical Perspective: Cyanobacteria -->
+        <div id="slide-5" class="slide-content hidden transition-all duration-300">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="px-3 py-1 bg-teal-100 text-teal-800 font-extrabold text-xs rounded-full">Planetary Science Connection</span>
+            <span class="text-xs text-slate-400 font-medium">Earth's Atmosphere Evolution</span>
+          </div>
+          <h3 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mb-2">
+            🌊 Cyanobacteria: The Tiny Microbes that Built Our Atmosphere
+          </h3>
+          <p class="text-slate-600 text-sm mb-4">
+            For Earth's first 2.3 billion years, our atmosphere had <strong>virtually zero oxygen</strong>! It was suffocatingly rich in volcanic gases like CO₂, nitrogen, water vapor, and sulfur dioxide.
+          </p>
+
+          <div class="bg-gradient-to-r from-sky-50 to-emerald-50 border border-emerald-200 p-5 rounded-2xl mb-4 flex flex-col sm:flex-row items-center gap-5">
+            <div class="text-5xl animate-float">🦠</div>
+            <div class="text-xs sm:text-sm text-slate-700 space-y-2">
+              <p>
+                Then, microscopic aquatic organisms called <strong>cyanobacteria (blue-green algae)</strong> evolved photosynthesis!
+              </p>
+              <p>
+                Over millions of years, countless trillions of these tiny autotrophs consumed atmospheric CO₂ and pumped out oxygen gas. This event—the <strong>Great Oxidation Event</strong>—made complex animal life and humans possible!
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-slate-100 p-3.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 flex items-center justify-between">
+            <span>Ready to test your hands-on atom balancing skills?</span>
+            <button onclick="switchTab('balancer')" class="btn-bounce px-4 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition">
+              Go to Atom Lab ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- Slide Footer Navigation Bar -->
+        <div class="pt-6 border-t border-slate-100 flex items-center justify-between mt-6">
+          <button onclick="prevSlide()" class="btn-bounce px-4 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex items-center gap-1.5 transition">
+            <span>◀</span> Previous Slide
+          </button>
+          <!-- Dots indicators -->
+          <div class="flex items-center gap-1.5" id="slideDots">
+            <span class="w-3 h-3 rounded-full bg-emerald-600 transition-all cursor-pointer" onclick="goToSlide(0)"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-all cursor-pointer" onclick="goToSlide(1)"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-all cursor-pointer" onclick="goToSlide(2)"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-all cursor-pointer" onclick="goToSlide(3)"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-all cursor-pointer" onclick="goToSlide(4)"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-200 transition-all cursor-pointer" onclick="goToSlide(5)"></span>
+          </div>
+          <button onclick="nextSlide()" class="btn-bounce px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm">
+            Next Slide <span>▶</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: INTERACTIVE ATOM ACCOUNTING BALANCER LAB -->
+    <!-- ========================================================================= -->
+    <section id="section-balancer" class="tab-section hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div class="max-w-3xl">
+          <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-3 py-1 rounded-full">
+            Hands-on STEM Lab • Manipulative Model
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mt-2">
+            ⚖️ Photosynthesis Atom Balance Scale
+          </h2>
+          <p class="text-slate-600 text-sm mt-1">
+            Simulate your classroom atom modeling kit! Adjust the molecule sliders on each side. Verify that reactant atoms match product atoms in accordance with the <strong>Law of Conservation of Mass</strong>.
+          </p>
+        </div>
+
+        <!-- Scale Balance Visual Header -->
+        <div class="mt-6 p-5 rounded-2xl border transition-all duration-300" id="scaleStatusCard">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span id="scaleEmoji" class="text-4xl">⚖️</span>
+              <div>
+                <h3 id="scaleStatusText" class="font-extrabold text-slate-900 text-base">Perfect Equilibrium!</h3>
+                <p id="scaleStatusSub" class="text-xs text-slate-500">Reactants and products both contain exactly 36 total atoms.</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="resetBalanceSliders()" class="btn-bounce text-xs font-bold px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                Reset to Standard (6:6 ➔ 1:6)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Sliders Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+          
+          <!-- Reactants Panel (Left Side) -->
+          <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h4 class="font-extrabold text-slate-900 text-lg flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500"></span> Reactant Inputs
+              </h4>
+              <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full" id="reactantAtomsTotal">
+                36 Total Atoms
+              </span>
+            </div>
+
+            <!-- CO2 Slider -->
+            <div>
+              <div class="flex justify-between items-center text-sm font-bold text-slate-700 mb-1">
+                <span>Carbon Dioxide Molecules (<span class="text-emerald-700">CO₂</span>)</span>
+                <span class="text-base font-extrabold text-emerald-700" id="co2Val">6</span>
+              </div>
+              <input type="range" id="slider-co2" min="1" max="10" value="6" oninput="updateBalanceSimulation()" class="w-full accent-emerald-600 cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                <span>1 molecule</span>
+                <span>Standard: 6</span>
+                <span>10 molecules</span>
+              </div>
+            </div>
+
+            <!-- H2O Slider -->
+            <div>
+              <div class="flex justify-between items-center text-sm font-bold text-slate-700 mb-1">
+                <span>Water Molecules (<span class="text-sky-600">H₂O</span>)</span>
+                <span class="text-base font-extrabold text-sky-600" id="h2oVal">6</span>
+              </div>
+              <input type="range" id="slider-h2o" min="1" max="10" value="6" oninput="updateBalanceSimulation()" class="w-full accent-sky-500 cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                <span>1 molecule</span>
+                <span>Standard: 6</span>
+                <span>10 molecules</span>
+              </div>
+            </div>
+
+            <!-- Reactant Atom Tally -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 grid grid-cols-3 gap-2 text-center">
+              <div class="p-2 rounded-lg bg-slate-100">
+                <span class="text-[11px] text-slate-500 font-bold block">Carbon (C)</span>
+                <span class="text-lg font-black text-slate-800" id="reactC">6</span>
+              </div>
+              <div class="p-2 rounded-lg bg-sky-50">
+                <span class="text-[11px] text-sky-700 font-bold block">Hydrogen (H)</span>
+                <span class="text-lg font-black text-sky-800" id="reactH">12</span>
+              </div>
+              <div class="p-2 rounded-lg bg-rose-50">
+                <span class="text-[11px] text-rose-700 font-bold block">Oxygen (O)</span>
+                <span class="text-lg font-black text-rose-800" id="reactO">18</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Products Panel (Right Side) -->
+          <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+              <h4 class="font-extrabold text-slate-900 text-lg flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-purple-500"></span> Product Outputs
+              </h4>
+              <span class="text-xs font-bold bg-purple-100 text-purple-800 px-2.5 py-1 rounded-full" id="productAtomsTotal">
+                36 Total Atoms
+              </span>
+            </div>
+
+            <!-- Glucose Slider -->
+            <div>
+              <div class="flex justify-between items-center text-sm font-bold text-slate-700 mb-1">
+                <span>Glucose Molecules (<span class="text-purple-700">C₆H₁₂O₆</span>)</span>
+                <span class="text-base font-extrabold text-purple-700" id="glucoseVal">1</span>
+              </div>
+              <input type="range" id="slider-glucose" min="0" max="3" value="1" oninput="updateBalanceSimulation()" class="w-full accent-purple-600 cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                <span>0 molecules</span>
+                <span>Standard: 1</span>
+                <span>3 molecules</span>
+              </div>
+            </div>
+
+            <!-- Oxygen Gas Slider -->
+            <div>
+              <div class="flex justify-between items-center text-sm font-bold text-slate-700 mb-1">
+                <span>Oxygen Gas Molecules (<span class="text-teal-600">O₂</span>)</span>
+                <span class="text-base font-extrabold text-teal-600" id="o2Val">6</span>
+              </div>
+              <input type="range" id="slider-o2" min="1" max="10" value="6" oninput="updateBalanceSimulation()" class="w-full accent-teal-600 cursor-pointer">
+              <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+                <span>1 molecule</span>
+                <span>Standard: 6</span>
+                <span>10 molecules</span>
+              </div>
+            </div>
+
+            <!-- Product Atom Tally -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 grid grid-cols-3 gap-2 text-center">
+              <div class="p-2 rounded-lg bg-slate-100">
+                <span class="text-[11px] text-slate-500 font-bold block">Carbon (C)</span>
+                <span class="text-lg font-black text-slate-800" id="prodC">6</span>
+              </div>
+              <div class="p-2 rounded-lg bg-sky-50">
+                <span class="text-[11px] text-sky-700 font-bold block">Hydrogen (H)</span>
+                <span class="text-lg font-black text-sky-800" id="prodH">12</span>
+              </div>
+              <div class="p-2 rounded-lg bg-rose-50">
+                <span class="text-[11px] text-rose-700 font-bold block">Oxygen (O)</span>
+                <span class="text-lg font-black text-rose-800" id="prodO">18</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Element Equality Badges -->
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div id="badge-c" class="p-4 rounded-2xl border text-center transition-all">
+            <span class="text-xs font-bold text-slate-500 block">Carbon Balance</span>
+            <span id="badge-c-text" class="text-sm font-extrabold text-emerald-700">✓ 6 in Reactants = 6 in Products</span>
+          </div>
+          <div id="badge-h" class="p-4 rounded-2xl border text-center transition-all">
+            <span class="text-xs font-bold text-slate-500 block">Hydrogen Balance</span>
+            <span id="badge-h-text" class="text-sm font-extrabold text-emerald-700">✓ 12 in Reactants = 12 in Products</span>
+          </div>
+          <div id="badge-o" class="p-4 rounded-2xl border text-center transition-all">
+            <span class="text-xs font-bold text-slate-500 block">Oxygen Balance</span>
+            <span id="badge-o-text" class="text-sm font-extrabold text-emerald-700">✓ 18 in Reactants = 18 in Products</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 3: LENA'S 24-HOUR GREENHOUSE EXPERIMENT SIMULATOR -->
+    <!-- ========================================================================= -->
+    <section id="section-greenhouse" class="tab-section hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-sky-700 bg-sky-100 px-3 py-1 rounded-full">
+              Inquiry & Data Analysis Activity
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mt-2">
+              📊 Lena's Airtight Greenhouse Log
+            </h2>
+            <p class="text-slate-600 text-sm mt-1 max-w-2xl">
+              Lena tracked real gas levels inside a sealed plant enclosure across 24 hours. Scrub the time slider below to observe how daytime sunlight and nighttime darkness drive gas exchanges!
+            </p>
+          </div>
+          <!-- Auto Play / Pause Simulation -->
+          <button id="greenhousePlayBtn" onclick="toggleGreenhousePlay()" class="btn-bounce px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-emerald-500/20 self-start transition">
+            <span id="playIcon">▶</span>
+            <span id="playText">Play 24-Hr Cycle</span>
+          </button>
+        </div>
+
+        <!-- Interactive Time Scrub Bar -->
+        <div class="mt-6 bg-slate-50 border border-slate-200 p-5 rounded-2xl">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Time of Day (24-Hour Military Format)</span>
+            <span id="currentTimeDisplay" class="text-lg font-black font-display text-slate-900 bg-white px-3 py-1 rounded-xl border border-slate-200 shadow-sm">
+              06:00 (Sunrise)
+            </span>
+          </div>
+          <input type="range" id="timeSlider" min="0" max="24" step="0.5" value="6" oninput="onTimeSliderChange(this.value)" class="w-full accent-amber-500 cursor-pointer">
+          <div class="flex justify-between text-xs text-slate-500 font-semibold mt-2">
+            <span>00:00 (Midnight)</span>
+            <span>06:00 (Sunrise 🌅)</span>
+            <span>12:00 (Noon ☀️)</span>
+            <span>18:00 (Sunset 🌇)</span>
+            <span>24:00 (Midnight 🌙)</span>
+          </div>
+        </div>
+
+        <!-- Simulation Greenhouse Dome Visual & Meters -->
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Visual Glass Greenhouse Chamber -->
+          <div id="greenhouseChamber" class="lg:col-span-1 rounded-3xl p-6 border transition-all duration-700 flex flex-col justify-between items-center text-center min-h-[300px] relative overflow-hidden bg-gradient-to-b from-sky-100 to-emerald-100 border-sky-300">
+            <!-- Sky Orb (Sun or Moon) -->
+            <div id="skyOrb" class="w-16 h-16 rounded-full bg-amber-400 shadow-lg shadow-amber-400/50 flex items-center justify-center text-3xl transition-all duration-700 animate-float">
+              ☀️
+            </div>
+
+            <!-- Plants Inside Chamber -->
+            <div class="relative z-10">
+              <div class="text-6xl mb-2 filter drop-shadow-sm">🪴🌿🌱</div>
+              <span id="biologicalProcessBadge" class="text-xs font-extrabold uppercase px-3 py-1 rounded-full bg-emerald-600 text-white shadow-sm">
+                Photosynthesis Active
+              </span>
+            </div>
+
+            <!-- Floating gas indicator badges -->
+            <div class="w-full grid grid-cols-2 gap-2 mt-4 text-xs font-bold z-10">
+              <div class="bg-white/90 backdrop-blur p-2 rounded-xl border border-slate-200">
+                <span class="text-slate-500 text-[10px] block">CO₂ Concentration</span>
+                <span class="text-emerald-700 text-sm font-black" id="co2Meter">420 ppm</span>
+              </div>
+              <div class="bg-white/90 backdrop-blur p-2 rounded-xl border border-slate-200">
+                <span class="text-slate-500 text-[10px] block">Oxygen (O₂) Level</span>
+                <span class="text-sky-600 text-sm font-black" id="o2Meter">20.9%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Graph Container -->
+          <div class="lg:col-span-2 bg-slate-50 p-5 rounded-3xl border border-slate-200 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-extrabold text-slate-800 text-sm">
+                📈 Continuous Gas Concentration Curve
+              </h4>
+              <div class="flex items-center gap-3 text-xs font-semibold">
+                <span class="flex items-center gap-1 text-emerald-700"><span class="w-2.5 h-2.5 rounded-full bg-emerald-600 inline-block"></span> CO₂ (ppm)</span>
+                <span class="flex items-center gap-1 text-sky-600"><span class="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span> O₂ (%)</span>
+              </div>
+            </div>
+            <div class="w-full h-64 sm:h-72">
+              <canvas id="greenhouseChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guided Inquiry Questions from Lesson Plan -->
+        <div class="mt-6 bg-slate-50 p-6 rounded-2xl border border-slate-200">
+          <h4 class="font-bold text-slate-900 text-sm mb-3">🔎 Data Analysis Checkpoint Questions</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white p-4 rounded-xl border border-slate-200">
+              <p class="text-xs font-bold text-slate-800">1. During which period was photosynthetic rate highest?</p>
+              <button onclick="revealGreenhouseAnswer(1)" class="mt-2 text-xs font-semibold text-emerald-700 hover:underline block">
+                Click to reveal scientific evidence
+              </button>
+              <p id="gh-ans-1" class="hidden text-xs text-slate-600 mt-2 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200">
+                <strong>Between 06:00 and 18:00 (Daytime):</strong> CO₂ fell sharply from 420 ppm to 290 ppm as chloroplasts used it to synthesize glucose. Simultaneously, O₂ rose from 20.9% to 21.6%.
+              </p>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200">
+              <p class="text-xs font-bold text-slate-800">2. Why did CO₂ increase and O₂ decrease after 18:00?</p>
+              <button onclick="revealGreenhouseAnswer(2)" class="mt-2 text-xs font-semibold text-emerald-700 hover:underline block">
+                Click to reveal scientific evidence
+              </button>
+              <p id="gh-ans-2" class="hidden text-xs text-slate-600 mt-2 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200">
+                <strong>Nighttime Cellular Respiration:</strong> Without sunlight radiant energy, photosynthesis stops. However, plant cells still need ATP energy to survive, so they breathe in O₂ and release CO₂!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 4: ADVENTURE-BASED GAME: "CARBY'S CARBON ODYSSEY" -->
+    <!-- ========================================================================= -->
+    <section id="section-game" class="tab-section hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+        
+        <!-- Game Header -->
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full">
+                Interactive Learning Adventure
+              </span>
+              <span class="text-xs font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full" id="gameStageBadge">
+                Stage 1: Atmospheric Cloud
+              </span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mt-2">
+              🎮 Carby's Carbon Odyssey
+            </h2>
+            <p class="text-slate-600 text-sm mt-1 max-w-2xl">
+              Play as <strong>Carby</strong>, an adventurous carbon atom! Travel from the air into a plant's stomata, bond into a sweet glucose molecule, power an herbivore, and get recycled by forest fungi!
+            </p>
+          </div>
+
+          <!-- In-game Stats Scoreboard -->
+          <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 p-2.5 rounded-2xl shadow-sm self-stretch md:self-auto justify-between">
+            <div class="px-3 border-r border-slate-200 text-center">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">Score</span>
+              <span id="gameScore" class="text-lg font-black text-slate-800">0</span>
+            </div>
+            <div class="px-3 border-r border-slate-200 text-center">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">Atoms Bound</span>
+              <span id="gameAtomsCollected" class="text-lg font-black text-emerald-600">0 / 6</span>
+            </div>
+            <div class="px-3 text-center">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">Health</span>
+              <span id="gameLives" class="text-lg font-black text-rose-500">❤️❤️❤️</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Arcade Canvas Viewport -->
+        <div class="mt-6 relative rounded-3xl overflow-hidden border-4 border-slate-200 bg-slate-900 shadow-inner">
+          <canvas id="gameCanvas" width="800" height="420" class="w-full h-auto block select-none bg-sky-200"></canvas>
+
+          <!-- Start / Game Over Overlay -->
+          <div id="gameOverlay" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center text-white p-6 text-center z-20">
+            <span class="text-6xl mb-3 animate-float" id="overlayEmoji">🌿</span>
+            <h3 id="overlayTitle" class="text-2xl sm:text-3xl font-black font-display mb-2">
+              Ready for the Carbon Odyssey?
+            </h3>
+            <p id="overlayDesc" class="text-xs sm:text-sm text-slate-300 max-w-md mb-6 leading-relaxed">
+              Use your arrow keys or on-screen buttons to jump and collect reactants (H₂O, Sunlight Photons, CO₂) while avoiding toxic pollutants. Answer science checkpoints to unlock the next biome!
+            </p>
+            <button onclick="startGame()" id="overlayBtn" class="btn-bounce px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/30 transition">
+              🚀 Start Mission
+            </button>
+          </div>
+
+          <!-- STEM Gate Quiz Modal Inside Canvas -->
+          <div id="gameGateModal" class="hidden absolute inset-0 bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-slate-900 z-30">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-100 text-left">
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 px-3 py-1 rounded-full">
+                Ecosystem Gatekeeper Question
+              </span>
+              <h4 id="gateQuestion" class="text-lg font-black font-display text-slate-900 mt-3 mb-4">
+                Question goes here?
+              </h4>
+              <div id="gateOptions" class="space-y-2.5">
+                <!-- Dynamically populated options -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Touch & Mobile Controller -->
+        <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+          <div class="text-xs text-slate-500">
+            <span class="font-bold text-slate-700">Desktop Controls:</span> Left / Right Arrows (or A/D) to move, Up Arrow / Space to Jump.
+          </div>
+          <!-- On-screen directional buttons for touch / tablet devices -->
+          <div class="flex items-center gap-3">
+            <button id="ctrlLeft" class="btn-bounce w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-sm font-black text-xl text-slate-700 flex items-center justify-center select-none active:bg-slate-200">
+              ◀
+            </button>
+            <button id="ctrlJump" class="btn-bounce px-6 h-14 rounded-2xl bg-emerald-600 text-white font-black text-sm shadow-md shadow-emerald-600/20 flex items-center justify-center select-none active:bg-emerald-700">
+              JUMP ⬆
+            </button>
+            <button id="ctrlRight" class="btn-bounce w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-sm font-black text-xl text-slate-700 flex items-center justify-center select-none active:bg-slate-200">
+              ▶
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 5: REMEDIATION (HELP & MISCONCEPTION BUSTER) -->
+    <!-- ========================================================================= -->
+    <section id="section-remediation" class="tab-section hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div class="max-w-3xl">
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-100 px-3 py-1 rounded-full">
+            Targeted Remediation & Concept Support
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mt-2">
+            🌱 Need a Boost? Let’s Clear Things Up!
+          </h2>
+          <p class="text-slate-600 text-sm mt-1">
+            Science can be tricky! Here are the 3 biggest misconceptions 7th graders encounter in photosynthesis, explained with simple visual logic.
+          </p>
+        </div>
+
+        <!-- Misconception Busters Grid -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Misconception 1 -->
+          <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 font-extrabold flex items-center justify-center text-lg">
+              ❌
+            </div>
+            <h4 class="font-extrabold text-slate-900 text-sm">Misconception: "Plants eat dirt and soil to grow."</h4>
+            <div class="text-xs text-slate-600 space-y-2">
+              <p>
+                <strong>The Truth:</strong> Soil only provides dissolved minerals (like nitrogen and phosphorus) and water. 
+              </p>
+              <p class="bg-white p-3 rounded-xl border border-slate-200 font-semibold text-emerald-800">
+                Over 95% of the plant's dry weight is built directly out of <strong>Carbon Dioxide gas</strong> taken from the air!
+              </p>
+            </div>
+          </div>
+
+          <!-- Misconception 2 -->
+          <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 font-extrabold flex items-center justify-center text-lg">
+              ❌
+            </div>
+            <h4 class="font-extrabold text-slate-900 text-sm">Misconception: "Sunlight is converted into physical atoms."</h4>
+            <div class="text-xs text-slate-600 space-y-2">
+              <p>
+                <strong>The Truth:</strong> Sunlight is pure radiant energy, NOT matter! Energy has no mass and cannot magically turn into carbon atoms.
+              </p>
+              <p class="bg-white p-3 rounded-xl border border-slate-200 font-semibold text-emerald-800">
+                Light acts as the "power tool" that breaks reactant bonds and cements atoms together into chemical bond energy (glucose).
+              </p>
+            </div>
+          </div>
+
+          <!-- Misconception 3 -->
+          <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-700 font-extrabold flex items-center justify-center text-lg">
+              ❌
+            </div>
+            <h4 class="font-extrabold text-slate-900 text-sm">Misconception: "Decomposers just get rid of gross trash."</h4>
+            <div class="text-xs text-slate-600 space-y-2">
+              <p>
+                <strong>The Truth:</strong> Decomposers are the ultimate recyclers. Without fungi and bacteria, all Earth's carbon would be trapped forever in dead trees.
+              </p>
+              <p class="bg-white p-3 rounded-xl border border-slate-200 font-semibold text-emerald-800">
+                Photosynthesis would completely stop once the atmosphere ran out of available carbon dioxide!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Classroom Atom Bead Reference Card -->
+        <div class="mt-8 p-6 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200">
+          <h4 class="font-extrabold text-slate-900 text-sm mb-2">🎨 Hands-On Molecule Kit Color Key:</h4>
+          <p class="text-xs text-slate-600 mb-4">
+            When using physical manipulative beads in science class, memorize this universal key:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-slate-900 inline-block shadow"></span>
+              <div>
+                <span class="text-xs font-bold text-slate-900 block">Black Bead = Carbon (C)</span>
+                <span class="text-[11px] text-slate-500">6 atoms total in 6CO₂ and C₆H₁₂O₆</span>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-sky-100 border-2 border-sky-400 inline-block shadow"></span>
+              <div>
+                <span class="text-xs font-bold text-slate-900 block">White Bead = Hydrogen (H)</span>
+                <span class="text-[11px] text-slate-500">12 atoms total in 6H₂O and C₆H₁₂O₆</span>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-rose-500 inline-block shadow"></span>
+              <div>
+                <span class="text-xs font-bold text-slate-900 block">Red Bead = Oxygen (O)</span>
+                <span class="text-[11px] text-slate-500">18 atoms total on each side</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 6: ENRICHMENT (ECO-SIM & BIOMIMICRY EXTENSION) -->
+    <!-- ========================================================================= -->
+    <section id="section-enrichment" class="tab-section hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div class="max-w-3xl">
+          <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-100 px-3 py-1 rounded-full">
+            Enrichment & Advanced Systems Thinking
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mt-2">
+            🚀 Deep Dive: Ecosystem Shock Simulator
+          </h2>
+          <p class="text-slate-600 text-sm mt-1">
+            Test real ecological phenomena! What happens to our planet's carbon and oxygen balance if key biological actors are altered?
+          </p>
+        </div>
+
+        <!-- Interactive Scenario Toggle -->
+        <div class="mt-6 flex flex-wrap gap-2">
+          <button onclick="setEnrichmentScenario('normal')" id="btn-scen-normal" class="btn-bounce px-4 py-2 rounded-xl text-xs font-bold border transition bg-emerald-600 text-white border-emerald-600">
+            Baseline Earth
+          </button>
+          <button onclick="setEnrichmentScenario('nodecomp')" id="btn-scen-nodecomp" class="btn-bounce px-4 py-2 rounded-xl text-xs font-bold border transition bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200">
+            ⚠️ What if Decomposers Vanish?
+          </button>
+          <button onclick="setEnrichmentScenario('cyanobacteria')" id="btn-scen-cyanobacteria" class="btn-bounce px-4 py-2 rounded-xl text-xs font-bold border transition bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200">
+            🦠 Early Earth Cyanobacteria Boom
+          </button>
+          <button onclick="setEnrichmentScenario('biomimicry')" id="btn-scen-biomimicry" class="btn-bounce px-4 py-2 rounded-xl text-xs font-bold border transition bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200">
+            🏥 Medical Phytoremediation
+          </button>
+        </div>
+
+        <!-- Simulation Narrative Card -->
+        <div id="enrichmentDisplayCard" class="mt-6 p-6 rounded-2xl border transition-all duration-300 bg-slate-50 border-slate-200">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 7: EXIT TICKET & CER LAB -->
+    <!-- ========================================================================= -->
+    <section id="section-quiz" class="tab-section hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div class="max-w-3xl">
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+            Formative Assessment (15 Min)
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-900 mt-2">
+            📝 Scope 7 Day 3 Exit Ticket & CER Lab
+          </h2>
+          <p class="text-slate-600 text-sm mt-1">
+            Demonstrate your mastery of Tennessee standards <strong>TN 7.LS1.7</strong> and <strong>TN 7.LS2.1</strong>. Answer the formative items and draft your scientific Claim-Evidence-Reasoning response!
+          </p>
+        </div>
+
+        <!-- Part 1: Interactive Multiple Choice Exit Ticket -->
+        <div class="mt-8 space-y-6">
+          <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2 border-b border-slate-200 pb-2">
+            <span>1️⃣</span> Quick-Check Questions
+          </h3>
+
+          <!-- Question 1 -->
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+            <p class="font-bold text-slate-800 text-sm mb-3">
+              1. (TN 7.LS2.1) Using Oxygen atoms, which calculation correctly proves that photosynthesis follows the Law of Conservation of Mass?
+            </p>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 text-xs">
+                <input type="radio" name="et1" value="A" class="accent-emerald-600">
+                <span>(A) Reactants have 6 O atoms; Products have 12 O atoms because energy created extra atoms.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 text-xs">
+                <input type="radio" name="et1" value="B" class="accent-emerald-600">
+                <span>(B) Reactants: (6×2 in CO₂) + (6×1 in H₂O) = 18 O atoms. Products: (6 in Glucose) + (6×2 in O₂) = 18 O atoms.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 text-xs">
+                <input type="radio" name="et1" value="C" class="accent-emerald-600">
+                <span>(C) Reactants have 12 O atoms; Products have 6 O atoms because 6 atoms were converted into heat.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+            <p class="font-bold text-slate-800 text-sm mb-3">
+              2. (TN 7.LS2.1) What catastrophic consequence would occur in a forest ecosystem if all decomposers (fungi and bacteria) suddenly disappeared?
+            </p>
+            <div class="space-y-2">
+              <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 text-xs">
+                <input type="radio" name="et2" value="A" class="accent-emerald-600">
+                <span>(A) Plants would produce twice as much glucose because of reduced competition.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 text-xs">
+                <input type="radio" name="et2" value="B" class="accent-emerald-600">
+                <span>(B) Dead organic matter would pile up, trapping carbon and eventually starving producers of atmospheric CO₂.</span>
+              </label>
+              <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 text-xs">
+                <input type="radio" name="et2" value="C" class="accent-emerald-600">
+                <span>(C) Oxygen levels in the atmosphere would immediately increase indefinitely.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Submit Exit Ticket Button -->
+          <button onclick="submitExitTicket()" class="btn-bounce px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20 transition">
+            Check My Answers
+          </button>
+          <div id="exitTicketFeedback" class="hidden p-4 rounded-xl text-xs font-semibold"></div>
+        </div>
+
+        <!-- Part 2: Claim-Evidence-Reasoning (CER) Builder -->
+        <div class="mt-10 pt-8 border-t border-slate-200 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+              <span>2️⃣</span> Scientific Argumentation: CER Builder
+            </h3>
+            <span class="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1 rounded-full">Rubric: 4 Points</span>
+          </div>
+
+          <div class="bg-amber-50/70 border border-amber-200 p-4 rounded-2xl text-xs text-amber-950">
+            <strong>Block 3 CER Prompt:</strong> <em>"A scientist seals an aquatic plant in an airtight water tube under bright sunlight for 6 hours. Write a scientific Claim-Evidence-Reasoning response answering: How does sunlight exposure alter gas composition in the sealed tube, and how does this support the Law of Conservation of Mass?"</em>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Claim -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">
+                Claim (Direct 1-sentence answer to prompt):
+              </label>
+              <input type="text" id="cerClaim" placeholder="e.g., Exposure to sunlight causes oxygen to increase and carbon dioxide to decrease because..." class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+
+            <!-- Evidence -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">
+                Evidence (Cite specific data, such as Lena's greenhouse log or bubble measurements):
+              </label>
+              <textarea id="cerEvidence" rows="2" placeholder="e.g., In closed-system investigations, oxygen rose from 20.9% to 21.6% while carbon dioxide plummeted by 130 ppm under bright light..." class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+            </div>
+
+            <!-- Reasoning -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">
+                Reasoning (Scientific principles: Conservation of Mass, Chloroplast function, Atom rearrangement):
+              </label>
+              <textarea id="cerReasoning" rows="2" placeholder="e.g., Radiant energy was converted to chemical bond energy inside chloroplasts. The Law of Conservation of Mass dictates that reactant atoms (6CO₂ + 6H₂O) were not destroyed, but merely rearranged into glucose and oxygen..." class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+            </div>
+
+            <!-- CER Actions -->
+            <div class="flex flex-wrap items-center gap-3">
+              <button onclick="evaluateCER()" class="btn-bounce px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-500/20 transition">
+                Evaluate My CER with Rubric
+              </button>
+              <button onclick="copyCERToClipboard()" class="btn-bounce px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition">
+                📋 Copy CER for Science Notebook
+              </button>
+            </div>
+            <div id="cerFeedback" class="hidden p-4 rounded-xl text-xs font-semibold"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        <strong>STEMscopes™ Tennessee Science Alignment</strong> • 7th Grade Life Science Scope 7 (Day 3 of 4)
+      </div>
+      <div>
+        Standards: <strong>TN 7.LS1.7</strong> & <strong>TN 7.LS2.1</strong>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC & AUDIO SYNTHESIS & ARCADE GAME ENGINE -->
+  <!-- ========================================================================= -->
+  <script>
+    // Audio Context Setup for zero-dependency sound effects
+    let audioCtx = null;
+    let sfxEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleSound() {
+      sfxEnabled = !sfxEnabled;
+      document.getElementById('soundIcon').innerText = sfxEnabled ? '🔊' : '🔇';
+      document.getElementById('soundLabel').innerText = sfxEnabled ? 'SFX: On' : 'SFX: Off';
+      showToast(sfxEnabled ? "Sound enabled!" : "Sound muted", sfxEnabled ? "Audio FX on" : "Audio FX off");
+    }
+
+    // Dynamic Tone Synthesizer
+    function playBeep(type = 'success') {
+      if (!sfxEnabled) return;
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+        if (type === 'success') {
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.15); // G5
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === 'jump') {
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.exponentialRampToValueAtTime(440, now + 0.12);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'collect') {
+          osc.frequency.setValueAtTime(659.25, now); // E5
+          osc.frequency.exponentialRampToValueAtTime(987.77, now + 0.12); // B5
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'error') {
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.setValueAtTime(164.81, now + 0.1);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        }
+      } catch (e) {
+        // Audio fallback
+      }
+    }
+
+    function showToast(title, message, icon = '💡') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastTitle').innerText = title;
+      document.getElementById('toastMessage').innerText = message;
+      document.getElementById('toastIcon').innerText = icon;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3500);
+    }
+
+    function switchTab(tabId) {
+      initAudio();
+      playBeep('jump');
+      const tabs = ['slides', 'balancer', 'greenhouse', 'game', 'remediation', 'enrichment', 'quiz'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`section-${t}`);
+        const btn = document.getElementById(`tab-${t}`);
+        if (sec && btn) {
+          if (t === tabId) {
+            sec.classList.remove('hidden');
+            btn.className = "nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-emerald-500 text-white shadow-sm shadow-emerald-500/30";
+          } else {
+            sec.classList.add('hidden');
+            btn.className = "nav-tab px-3.5 py-2 rounded-xl transition flex items-center gap-2 whitespace-nowrap bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900";
+          }
+        }
+      });
+      if (tabId === 'greenhouse') {
+        initGreenhouseChart();
+      }
+      if (tabId === 'game' && !gameRunning) {
+        initGame();
+      }
+    }
+
+    let currentSlide = 0;
+    const totalSlides = 6;
+
+    function showSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= totalSlides) index = totalSlides - 1;
+      currentSlide = index;
+
+      for (let i = 0; i < totalSlides; i++) {
+        const sl = document.getElementById(`slide-${i}`);
+        if (sl) {
+          sl.classList.toggle('hidden', i !== currentSlide);
+        }
+      }
+      document.getElementById('slideIndicator').innerText = `Slide ${currentSlide + 1} of ${totalSlides}`;
+      
+      // Update dot styles
+      const dots = document.getElementById('slideDots').children;
+      for (let i = 0; i < dots.length; i++) {
+        if (i === currentSlide) {
+          dots[i].className = "w-3 h-3 rounded-full bg-emerald-600 transition-all cursor-pointer";
+        } else {
+          dots[i].className = "w-2.5 h-2.5 rounded-full bg-slate-200 transition-all cursor-pointer";
+        }
+      }
+    }
+
+    function nextSlide() {
+      playBeep('jump');
+      showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      playBeep('jump');
+      showSlide(currentSlide - 1);
+    }
+
+    function goToSlide(idx) {
+      playBeep('jump');
+      showSlide(idx);
+    }
+
+    function answerBellringer(option) {
+      const res = document.getElementById('bellringerResult');
+      res.classList.remove('hidden');
+
+      // Reset options border
+      ['soil', 'water', 'air', 'sun'].forEach(opt => {
+        const el = document.getElementById(`btn-${opt}`);
+        if (el) el.classList.remove('border-rose-400', 'bg-rose-50', 'border-emerald-500', 'bg-emerald-50');
+      });
+
+      if (option === 'air') {
+        playBeep('success');
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+        document.getElementById('btn-air').classList.add('border-emerald-500', 'bg-emerald-50');
+        res.className = "p-5 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-950 mt-4";
+        res.innerHTML = `
+          <div class="flex items-center gap-2 font-bold text-sm mb-1">
+            <span class="text-xl">🎉</span> Correct! The Air is the Answer!
+          </div>
+          <p class="text-xs leading-relaxed">
+            The vast majority of a giant sequoia's physical mass comes from atmospheric <strong>Carbon Dioxide (CO₂)</strong> captured through leaf stomata! Through photosynthesis, the plant binds gaseous carbon into solid wood (cellulose) and glucose. Plants literally build towering skyscrapers out of thin air!
+          </p>
+        `;
+      } else {
+        playBeep('error');
+        document.getElementById(`btn-${option}`).classList.add('border-rose-400', 'bg-rose-50');
+        res.className = "p-5 rounded-2xl border border-rose-200 bg-rose-50 text-rose-950 mt-4";
+        res.innerHTML = `
+          <div class="flex items-center gap-2 font-bold text-sm mb-1">
+            <span class="text-xl">🤔</span> Common 7th Grade Misconception!
+          </div>
+          <p class="text-xs leading-relaxed">
+            While soil provides minerals and water provides hydrogen, their contribution to the dry mass is small! Sunlight is radiant energy (no mass). The correct answer is <strong>(C) Air</strong>, because carbon dioxide gas provides the physical carbon atoms forming glucose and wood.
+          </p>
+        `;
+      }
+    }
+
+    function updateBalanceSimulation() {
+      const co2 = parseInt(document.getElementById('slider-co2').value, 10);
+      const h2o = parseInt(document.getElementById('slider-h2o').value, 10);
+      const glucose = parseInt(document.getElementById('slider-glucose').value, 10);
+      const o2 = parseInt(document.getElementById('slider-o2').value, 10);
+
+      document.getElementById('co2Val').innerText = co2;
+      document.getElementById('h2oVal').innerText = h2o;
+      document.getElementById('glucoseVal').innerText = glucose;
+      document.getElementById('o2Val').innerText = o2;
+
+      // Calculate Reactant atoms
+      const rC = co2 * 1;
+      const rH = h2o * 2;
+      const rO = (co2 * 2) + (h2o * 1);
+      const totalReactants = rC + rH + rO;
+
+      // Calculate Product atoms
+      const pC = glucose * 6;
+      const pH = glucose * 12;
+      const pO = (glucose * 6) + (o2 * 2);
+      const totalProducts = pC + pH + pO;
+
+      // Update Tally Numbers
+      document.getElementById('reactC').innerText = rC;
+      document.getElementById('reactH').innerText = rH;
+      document.getElementById('reactO').innerText = rO;
+      document.getElementById('reactantAtomsTotal').innerText = `${totalReactants} Total Atoms`;
+
+      document.getElementById('prodC').innerText = pC;
+      document.getElementById('prodH').innerText = pH;
+      document.getElementById('prodO').innerText = pO;
+      document.getElementById('productAtomsTotal').innerText = `${totalProducts} Total Atoms`;
+
+      // Evaluate per-element balance
+      const cMatch = rC === pC;
+      const hMatch = rH === pH;
+      const oMatch = rO === pO;
+
+      const badgeC = document.getElementById('badge-c');
+      const badgeH = document.getElementById('badge-h');
+      const badgeO = document.getElementById('badge-o');
+
+      updateElementBadge(badgeC, 'badge-c-text', 'Carbon (C)', rC, pC, cMatch);
+      updateElementBadge(badgeH, 'badge-h-text', 'Hydrogen (H)', rH, pH, hMatch);
+      updateElementBadge(badgeO, 'badge-o-text', 'Oxygen (O)', rO, pO, oMatch);
+
+      const scaleCard = document.getElementById('scaleStatusCard');
+      const scaleEmoji = document.getElementById('scaleEmoji');
+      const scaleTitle = document.getElementById('scaleStatusText');
+      const scaleSub = document.getElementById('scaleStatusSub');
+
+      if (cMatch && hMatch && oMatch) {
+        scaleCard.className = "mt-6 p-5 rounded-2xl border border-emerald-200 bg-emerald-50 transition-all";
+        scaleEmoji.innerText = "⚖️";
+        scaleTitle.innerText = "Conservation Law Satisfied: Perfectly Balanced!";
+        scaleSub.innerText = `Reactants (${totalReactants} atoms) = Products (${totalProducts} atoms). No atoms created or destroyed.`;
+      } else {
+        scaleCard.className = "mt-6 p-5 rounded-2xl border border-amber-200 bg-amber-50 transition-all";
+        scaleEmoji.innerText = "⚠️";
+        scaleTitle.innerText = "Unbalanced Reaction!";
+        scaleSub.innerText = `Reactants have ${totalReactants} atoms while Products have ${totalProducts} atoms. Adjust sliders to satisfy the Law of Conservation of Mass!`;
+      }
+    }
+
+    function updateElementBadge(badgeEl, textId, name, rVal, pVal, isMatch) {
+      const textEl = document.getElementById(textId);
+      if (isMatch) {
+        badgeEl.className = "p-4 rounded-2xl border border-emerald-200 bg-emerald-50/70 text-center transition-all";
+        textEl.className = "text-sm font-extrabold text-emerald-800";
+        textEl.innerText = `✓ ${name}: ${rVal} in = ${pVal} out`;
+      } else {
+        badgeEl.className = "p-4 rounded-2xl border border-rose-200 bg-rose-50/70 text-center transition-all";
+        textEl.className = "text-sm font-extrabold text-rose-700";
+        textEl.innerText = `✗ ${name}: ${rVal} in ≠ ${pVal} out`;
+      }
+    }
+
+    function resetBalanceSliders() {
+      playBeep('jump');
+      document.getElementById('slider-co2').value = 6;
+      document.getElementById('slider-h2o').value = 6;
+      document.getElementById('slider-glucose').value = 1;
+      document.getElementById('slider-o2').value = 6;
+      updateBalanceSimulation();
+    }
+
+    let ghChartInstance = null;
+    let isPlayingGh = false;
+    let ghPlayTimer = null;
+
+    // Authentic STEMscopes Lena's Experiment Data points
+    const greenhouseDataLog = [
+      { hour: 0, time: "00:00 (Midnight)", co2: 360, o2: 21.2, sun: false },
+      { hour: 3, time: "03:00 (Late Night)", co2: 390, o2: 21.05, sun: false },
+      { hour: 6, time: "06:00 (Sunrise)", co2: 420, o2: 20.9, sun: true },
+      { hour: 9, time: "09:00 (Morning)", co2: 360, o2: 21.15, sun: true },
+      { hour: 12, time: "12:00 (Noon)", co2: 310, o2: 21.4, sun: true },
+      { hour: 15, time: "15:00 (Afternoon)", co2: 295, o2: 21.55, sun: true },
+      { hour: 18, time: "18:00 (Sunset)", co2: 290, o2: 21.6, sun: true },
+      { hour: 21, time: "21:00 (Dusk)", co2: 325, o2: 21.4, sun: false },
+      { hour: 24, time: "24:00 (Midnight)", co2: 360, o2: 21.2, sun: false }
+    ];
+
+    function initGreenhouseChart() {
+      if (ghChartInstance) return;
+      const ctx = document.getElementById('greenhouseChart').getContext('2d');
+      const hours = greenhouseDataLog.map(d => d.time.split(' ')[0]);
+      const co2Points = greenhouseDataLog.map(d => d.co2);
+      const o2Points = greenhouseDataLog.map(d => d.o2);
+
+      ghChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: hours,
+          datasets: [
+            {
+              label: 'CO₂ (ppm)',
+              data: co2Points,
+              borderColor: '#059669',
+              backgroundColor: 'rgba(5, 150, 105, 0.08)',
+              yAxisID: 'yCO2',
+              tension: 0.35,
+              fill: true,
+              pointRadius: 4,
+              pointBackgroundColor: '#059669'
+            },
+            {
+              label: 'Oxygen O₂ (%)',
+              data: o2Points,
+              borderColor: '#0284c7',
+              backgroundColor: 'transparent',
+              yAxisID: 'yO2',
+              tension: 0.35,
+              borderDash: [5, 5],
+              pointRadius: 4,
+              pointBackgroundColor: '#0284c7'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            yCO2: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              title: { display: true, text: 'CO₂ (ppm)', color: '#059669', font: { weight: 'bold', size: 11 } },
+              suggestedMin: 270,
+              suggestedMax: 440
+            },
+            yO2: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'Oxygen O₂ (%)', color: '#0284c7', font: { weight: 'bold', size: 11 } },
+              suggestedMin: 20.6,
+              suggestedMax: 21.8
+            }
+          }
+        }
+      });
+      onTimeSliderChange(6);
+    }
+
+    function onTimeSliderChange(val) {
+      const numericHour = parseFloat(val);
+      // Interpolate CO2 and O2
+      let prevPoint = greenhouseDataLog[0];
+      let nextPoint = greenhouseDataLog[greenhouseDataLog.length - 1];
+
+      for (let i = 0; i < greenhouseDataLog.length - 1; i++) {
+        if (numericHour >= greenhouseDataLog[i].hour && numericHour <= greenhouseDataLog[i + 1].hour) {
+          prevPoint = greenhouseDataLog[i];
+          nextPoint = greenhouseDataLog[i + 1];
+          break;
+        }
+      }
+
+      const fraction = (nextPoint.hour === prevPoint.hour) ? 0 : (numericHour - prevPoint.hour) / (nextPoint.hour - prevPoint.hour);
+      const curCo2 = Math.round(prevPoint.co2 + (nextPoint.co2 - prevPoint.co2) * fraction);
+      const curO2 = (prevPoint.o2 + (nextPoint.o2 - prevPoint.o2) * fraction).toFixed(2);
+
+      const isDaytime = (numericHour >= 6 && numericHour <= 18);
+
+      // DOM updates
+      const timeFmt = (numericHour < 10 ? '0' : '') + Math.floor(numericHour) + ':' + (numericHour % 1 === 0 ? '00' : '30');
+      document.getElementById('currentTimeDisplay').innerText = `${timeFmt} (${isDaytime ? 'Daylight ☀️' : 'Nighttime 🌙'})`;
+      document.getElementById('co2Meter').innerText = `${curCo2} ppm`;
+      document.getElementById('o2Meter').innerText = `${curO2}%`;
+
+      const chamber = document.getElementById('greenhouseChamber');
+      const orb = document.getElementById('skyOrb');
+      const badge = document.getElementById('biologicalProcessBadge');
+
+      if (isDaytime) {
+        chamber.className = "lg:col-span-1 rounded-3xl p-6 border transition-all duration-700 flex flex-col justify-between items-center text-center min-h-[300px] relative overflow-hidden bg-gradient-to-b from-amber-50 to-emerald-100 border-amber-300";
+        orb.className = "w-16 h-16 rounded-full bg-amber-400 shadow-xl shadow-amber-400/60 flex items-center justify-center text-3xl transition-all duration-700 animate-float";
+        orb.innerText = "☀️";
+        badge.className = "text-xs font-extrabold uppercase px-3 py-1 rounded-full bg-emerald-600 text-white shadow-sm";
+        badge.innerText = "Photosynthesis Active (CO₂ Consumed)";
+      } else {
+        chamber.className = "lg:col-span-1 rounded-3xl p-6 border transition-all duration-700 flex flex-col justify-between items-center text-center min-h-[300px] relative overflow-hidden bg-gradient-to-b from-slate-800 to-indigo-950 border-indigo-700 text-white";
+        orb.className = "w-16 h-16 rounded-full bg-slate-200 shadow-xl shadow-slate-300/40 flex items-center justify-center text-3xl transition-all duration-700 animate-float";
+        orb.innerText = "🌙";
+        badge.className = "text-xs font-extrabold uppercase px-3 py-1 rounded-full bg-indigo-500 text-white shadow-sm";
+        badge.innerText = "Cellular Respiration (CO₂ Released)";
+      }
+    }
+
+    function toggleGreenhousePlay() {
+      initAudio();
+      isPlayingGh = !isPlayingGh;
+      const btn = document.getElementById('greenhousePlayBtn');
+      const icon = document.getElementById('playIcon');
+      const text = document.getElementById('playText');
+
+      if (isPlayingGh) {
+        btn.className = "btn-bounce px-5 py-3 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-amber-500/20 self-start transition";
+        icon.innerText = "⏸";
+        text.innerText = "Pause Simulation";
+        ghPlayTimer = setInterval(() => {
+          const slider = document.getElementById('timeSlider');
+          let nextVal = parseFloat(slider.value) + 0.5;
+          if (nextVal > 24) nextVal = 0;
+          slider.value = nextVal;
+          onTimeSliderChange(nextVal);
+        }, 350);
+      } else {
+        clearInterval(ghPlayTimer);
+        btn.className = "btn-bounce px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-emerald-500/20 self-start transition";
+        icon.innerText = "▶";
+        text.innerText = "Play 24-Hr Cycle";
+      }
+    }
+
+    function revealGreenhouseAnswer(num) {
+      playBeep('jump');
+      const el = document.getElementById(`gh-ans-${num}`);
+      el.classList.toggle('hidden');
+    }
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let gameRunning = false;
+    let score = 0;
+    let atomsCollected = 0;
+    let lives = 3;
+    let currentStage = 1; // 1: Atmosphere, 2: Chloroplast, 3: Herbivore, 4: Decomposer
+    let animationFrameId = null;
+
+    // Player state
+    const player = {
+      x: 50,
+      y: 300,
+      width: 32,
+      height: 32,
+      vx: 0,
+      vy: 0,
+      speed: 4.5,
+      jumpForce: -11.5,
+      grounded: false,
+      color: '#10b981'
+    };
+
+    // Game world entities
+    let platforms = [];
+    let collectibleItems = [];
+    let obstacles = [];
+    let finishPortal = { x: 740, y: 260, width: 36, height: 60 };
+
+    // Keys state
+    const keys = {
+      left: false,
+      right: false,
+      jump: false
+    };
+
+    // Keyboard listeners
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowLeft', 'KeyA'].includes(e.code)) keys.left = true;
+      if (['ArrowRight', 'KeyD'].includes(e.code)) keys.right = true;
+      if (['ArrowUp', 'KeyW', 'Space'].includes(e.code)) {
+        if (!keys.jump && player.grounded) {
+          player.vy = player.jumpForce;
+          player.grounded = false;
+          playBeep('jump');
+        }
+        keys.jump = true;
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (['ArrowLeft', 'KeyA'].includes(e.code)) keys.left = false;
+      if (['ArrowRight', 'KeyD'].includes(e.code)) keys.right = false;
+      if (['ArrowUp', 'KeyW', 'Space'].includes(e.code)) keys.jump = false;
+    });
+
+    // Touch button listeners
+    const btnLeft = document.getElementById('ctrlLeft');
+    const btnRight = document.getElementById('ctrlRight');
+    const btnJump = document.getElementById('ctrlJump');
+
+    btnLeft.addEventListener('touchstart', (e) => { e.preventDefault(); keys.left = true; });
+    btnLeft.addEventListener('touchend', (e) => { e.preventDefault(); keys.left = false; });
+    btnLeft.addEventListener('mousedown', () => { keys.left = true; });
+    btnLeft.addEventListener('mouseup', () => { keys.left = false; });
+
+    btnRight.addEventListener('touchstart', (e) => { e.preventDefault(); keys.right = true; });
+    btnRight.addEventListener('touchend', (e) => { e.preventDefault(); keys.right = false; });
+    btnRight.addEventListener('mousedown', () => { keys.right = true; });
+    btnRight.addEventListener('mouseup', () => { keys.right = false; });
+
+    btnJump.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (player.grounded) {
+        player.vy = player.jumpForce;
+        player.grounded = false;
+        playBeep('jump');
+      }
+    });
+    btnJump.addEventListener('mousedown', () => {
+      if (player.grounded) {
+        player.vy = player.jumpForce;
+        player.grounded = false;
+        playBeep('jump');
+      }
+    });
+
+    function loadStage(stageNum) {
+      currentStage = stageNum;
+      player.x = 40;
+      player.y = 280;
+      player.vx = 0;
+      player.vy = 0;
+      atomsCollected = 0;
+      updateGameUI();
+
+      const stageBadge = document.getElementById('gameStageBadge');
+
+      if (stageNum === 1) {
+        stageBadge.innerText = "Stage 1: Atmospheric Stomata (Enter the Leaf)";
+        platforms = [
+          { x: 0, y: 360, width: 800, height: 60, color: '#059669' }, // ground leaf surface
+          { x: 180, y: 280, width: 120, height: 16, color: '#34d399' },
+          { x: 360, y: 220, width: 130, height: 16, color: '#34d399' },
+          { x: 550, y: 270, width: 120, height: 16, color: '#34d399' }
+        ];
+        collectibleItems = [
+          { x: 220, y: 240, type: 'CO₂', label: 'CO₂ Atom', color: '#1e293b' },
+          { x: 410, y: 180, type: 'H₂O', label: 'H₂O Drop', color: '#0284c7' },
+          { x: 590, y: 230, type: 'CO₂', label: 'CO₂ Atom', color: '#1e293b' },
+          { x: 480, y: 320, type: 'Photon', label: '☀️ Radiant Light', color: '#f59e0b' }
+        ];
+        obstacles = [
+          { x: 310, y: 340, width: 28, height: 20, label: 'Smog' }
+        ];
+      } else if (stageNum === 2) {
+        stageBadge.innerText = "Stage 2: The Chloroplast Workshop (Synthesize Glucose)";
+        platforms = [
+          { x: 0, y: 360, width: 800, height: 60, color: '#10b981' },
+          { x: 140, y: 270, width: 100, height: 16, color: '#059669' },
+          { x: 300, y: 200, width: 130, height: 16, color: '#059669' },
+          { x: 490, y: 250, width: 110, height: 16, color: '#059669' }
+        ];
+        collectibleItems = [
+          { x: 180, y: 230, type: 'C', label: 'Carbon Atom', color: '#111827' },
+          { x: 350, y: 160, type: 'H', label: 'Hydrogen Atom', color: '#38bdf8' },
+          { x: 530, y: 210, type: 'O', label: 'Oxygen Atom', color: '#f43f5e' },
+          { x: 670, y: 320, type: 'Glucose', label: 'C₆H₁₂O₆ Core', color: '#9333ea' }
+        ];
+        obstacles = [
+          { x: 250, y: 340, width: 25, height: 20, label: 'Heat Spill' },
+          { x: 440, y: 340, width: 25, height: 20, label: 'Heat Spill' }
+        ];
+      } else if (stageNum === 3) {
+        stageBadge.innerText = "Stage 3: The Consumer Herbivore (Respiration Chamber)";
+        platforms = [
+          { x: 0, y: 360, width: 800, height: 60, color: '#78716c' },
+          { x: 160, y: 280, width: 110, height: 16, color: '#a8a29e' },
+          { x: 330, y: 210, width: 120, height: 16, color: '#a8a29e' },
+          { x: 520, y: 260, width: 110, height: 16, color: '#a8a29e' }
+        ];
+        collectibleItems = [
+          { x: 200, y: 240, type: 'ATP', label: '⚡ ATP Energy', color: '#eab308' },
+          { x: 380, y: 170, type: 'O₂', label: 'O₂ for Breathing', color: '#06b6d4' },
+          { x: 560, y: 220, type: 'CO₂', label: 'CO₂ Exhaled', color: '#1e293b' }
+        ];
+        obstacles = [
+          { x: 460, y: 340, width: 28, height: 20, label: 'Acid' }
+        ];
+      } else if (stageNum === 4) {
+        stageBadge.innerText = "Stage 4: Decomposer Realm (Mushroom Recyclers)";
+        platforms = [
+          { x: 0, y: 360, width: 800, height: 60, color: '#451a03' },
+          { x: 150, y: 270, width: 110, height: 16, color: '#78350f' },
+          { x: 320, y: 200, width: 140, height: 16, color: '#78350f' },
+          { x: 530, y: 260, width: 120, height: 16, color: '#78350f' }
+        ];
+        collectibleItems = [
+          { x: 190, y: 230, type: 'FungiSpore', label: '🍄 Mushroom Bond', color: '#b45309' },
+          { x: 380, y: 160, type: 'Nutrient', label: 'Recycled Carbon', color: '#10b981' },
+          { x: 580, y: 220, type: 'CO₂', label: 'Free Atmospheric CO₂', color: '#1e293b' }
+        ];
+        obstacles = [
+          { x: 260, y: 340, width: 25, height: 20, label: 'Thorns' },
+          { x: 470, y: 340, width: 25, height: 20, label: 'Thorns' }
+        ];
+      }
+    }
+
+    function initGame() {
+      loadStage(1);
+      drawStaticPreview();
+    }
+
+    function startGame() {
+      initAudio();
+      playBeep('success');
+      score = 0;
+      lives = 3;
+      loadStage(1);
+      document.getElementById('gameOverlay').classList.add('hidden');
+      gameRunning = true;
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      gameLoop();
+    }
+
+    function updateGameUI() {
+      document.getElementById('gameScore').innerText = score;
+      document.getElementById('gameAtomsCollected').innerText = `${atomsCollected} / ${collectibleItems.length}`;
+      let hearts = '';
+      for (let i = 0; i < lives; i++) hearts += '❤️';
+      document.getElementById('gameLives').innerText = hearts || '💀';
+    }
+
+    function gameLoop() {
+      if (!gameRunning) return;
+
+      // Horizontal movement
+      if (keys.left) player.vx = -player.speed;
+      else if (keys.right) player.vx = player.speed;
+      else player.vx *= 0.78; // friction
+
+      // Gravity
+      player.vy += 0.58;
+
+      player.x += player.vx;
+      player.y += player.vy;
+
+      // Platform collisions
+      player.grounded = false;
+      platforms.forEach(plat => {
+        if (
+          player.x + player.width > plat.x &&
+          player.x < plat.x + plat.width &&
+          player.y + player.height >= plat.y &&
+          player.y + player.height <= plat.y + 16 &&
+          player.vy >= 0
+        ) {
+          player.y = plat.y - player.height;
+          player.vy = 0;
+          player.grounded = true;
+        }
+      });
+
+      // Canvas boundary limits
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+      if (player.y > canvas.height + 50) {
+        // Fell down
+        takeDamage();
+        player.x = 50;
+        player.y = 200;
+      }
+
+      // Collectible collision check
+      for (let i = collectibleItems.length - 1; i >= 0; i--) {
+        const item = collectibleItems[i];
+        const dist = Math.hypot((player.x + 16) - item.x, (player.y + 16) - item.y);
+        if (dist < 26) {
+          collectibleItems.splice(i, 1);
+          atomsCollected++;
+          score += 150;
+          playBeep('collect');
+          showToast(`Acquired: ${item.label}!`, "+150 Points!", "✨");
+          updateGameUI();
+        }
+      }
+
+      // Obstacle collision check
+      obstacles.forEach(obs => {
+        if (
+          player.x + player.width > obs.x &&
+          player.x < obs.x + obs.width &&
+          player.y + player.height > obs.y &&
+          player.y < obs.y + obs.height
+        ) {
+          takeDamage();
+          player.x = Math.max(30, player.x - 40);
+        }
+      });
+
+      // Finish Portal reached check
+      if (
+        player.x + player.width > finishPortal.x &&
+        player.x < finishPortal.x + finishPortal.width &&
+        player.y + player.height > finishPortal.y
+      ) {
+        pauseForGateQuestion();
+        return;
+      }
+
+      // Render Everything
+      renderGame();
+
+      animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    function renderGame() {
+      // Stage themed background
+      if (currentStage === 1) {
+        ctx.fillStyle = '#bae6fd'; // sky blue
+      } else if (currentStage === 2) {
+        ctx.fillStyle = '#d1fae5'; // chloroplast green interior
+      } else if (currentStage === 3) {
+        ctx.fillStyle = '#fef3c7'; // warm consumer gut / cell
+      } else {
+        ctx.fillStyle = '#fed7aa'; // soil underworld
+      }
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw background decorative clouds/bubbles
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.beginPath();
+      ctx.arc(120, 80, 45, 0, Math.PI * 2);
+      ctx.arc(160, 70, 55, 0, Math.PI * 2);
+      ctx.arc(200, 80, 40, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(580, 90, 40, 0, Math.PI * 2);
+      ctx.arc(620, 80, 50, 0, Math.PI * 2);
+      ctx.arc(660, 90, 35, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw platforms
+      platforms.forEach(plat => {
+        ctx.fillStyle = plat.color;
+        ctx.beginPath();
+        ctx.roundRect(plat.x, plat.y, plat.width, plat.height, 8);
+        ctx.fill();
+
+        // Platform top highlight line
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(plat.x + 4, plat.y + 2);
+        ctx.lineTo(plat.x + plat.width - 4, plat.y + 2);
+        ctx.stroke();
+      });
+
+      // Draw obstacles
+      obstacles.forEach(obs => {
+        ctx.fillStyle = '#dc2626';
+        ctx.beginPath();
+        ctx.moveTo(obs.x, obs.y + obs.height);
+        ctx.lineTo(obs.x + obs.width / 2, obs.y);
+        ctx.lineTo(obs.x + obs.width, obs.y + obs.height);
+        ctx.closePath();
+        ctx.fill();
+      });
+
+      // Draw collectible items
+      collectibleItems.forEach(item => {
+        ctx.save();
+        ctx.translate(item.x, item.y + Math.sin(Date.now() / 250) * 4);
+        ctx.fillStyle = item.color;
+        ctx.beginPath();
+        ctx.arc(0, 0, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#ffffff';
+        ctx.stroke();
+
+        // Text label on atom
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText(item.type, 0, 3);
+        ctx.restore();
+      });
+
+      // Draw finish portal
+      ctx.save();
+      const portalGlow = (Math.sin(Date.now() / 200) + 1) * 5;
+      ctx.shadowBlur = 10 + portalGlow;
+      ctx.shadowColor = '#10b981';
+      ctx.fillStyle = '#059669';
+      ctx.beginPath();
+      ctx.roundRect(finishPortal.x, finishPortal.y, finishPortal.width, finishPortal.height, 16);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 10px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText('NEXT', finishPortal.x + finishPortal.width / 2, finishPortal.y + 34);
+      ctx.restore();
+
+      // Draw Player: "Carby" the cute Carbon Atom!
+      ctx.save();
+      ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
+
+      // Outer electron orbital glow
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, 19, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Main Carbon nucleus
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.arc(0, 0, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#34d399';
+      ctx.stroke();
+
+      // Eyes
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-4, -2, 3.5, 0, Math.PI * 2);
+      ctx.arc(4, -2, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Pupils looking towards movement
+      ctx.fillStyle = '#000000';
+      const lookOffset = player.vx > 0.5 ? 1.5 : (player.vx < -0.5 ? -1.5 : 0);
+      ctx.beginPath();
+      ctx.arc(-4 + lookOffset, -2, 1.8, 0, Math.PI * 2);
+      ctx.arc(4 + lookOffset, -2, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Happy smile
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, 3, 4, 0, Math.PI);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawStaticPreview() {
+      ctx.fillStyle = '#bae6fd';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#059669';
+      ctx.fillRect(0, 360, 800, 60);
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.arc(100, 340, 16, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function takeDamage() {
+      playBeep('error');
+      lives--;
+      updateGameUI();
+      if (lives <= 0) {
+        gameOver(false);
+      } else {
+        showToast("Ouch! Lost 1 Health", "Watch out for obstacles!", "⚠️");
+      }
+    }
+
+    const stageQuestions = {
+      1: {
+        q: "Standard TN 7.LS1.7: What two raw chemical inputs (reactants) did Carby just gather inside the leaf?",
+        options: [
+          { text: "Glucose and Oxygen", correct: false },
+          { text: "Carbon Dioxide (CO₂) and Water (H₂O)", correct: true },
+          { text: "Nitrogen gas and Soil Minerals", correct: false }
+        ]
+      },
+      2: {
+        q: "Standard TN 7.LS2.1: According to the Law of Conservation of Mass, how many total Carbon atoms exist in 1 molecule of Glucose?",
+        options: [
+          { text: "Exactly 6 Carbon atoms (C₆H₁₂O₆)", correct: true },
+          { text: "12 Carbon atoms", correct: false },
+          { text: "Zero, atoms disappear in reactions", correct: false }
+        ]
+      },
+      3: {
+        q: "Scope 7 Review: When an herbivore eats glucose and performs cellular respiration, which gas is released back to the air?",
+        options: [
+          { text: "Pure Hydrogen gas", correct: false },
+          { text: "Carbon Dioxide (CO₂)", correct: true },
+          { text: "Liquid Nitrogen", correct: false }
+        ]
+      },
+      4: {
+        q: "Ecosystem Synthesis: What role do fungi decomposers play at the end of the carbon cycle?",
+        options: [
+          { text: "They destroy atoms so they never return", correct: false },
+          { text: "They recycle locked carbon from dead leaves back into the soil and air", correct: true },
+          { text: "They block plants from receiving sunlight", correct: false }
+        ]
+      }
+    };
+
+    function pauseForGateQuestion() {
+      gameRunning = false;
+      const modal = document.getElementById('gameGateModal');
+      const questionEl = document.getElementById('gateQuestion');
+      const optionsEl = document.getElementById('gateOptions');
+
+      const data = stageQuestions[currentStage];
+      questionEl.innerText = data.q;
+      optionsEl.innerHTML = '';
+
+      data.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 text-xs font-semibold transition text-slate-800";
+        btn.innerText = opt.text;
+        btn.onclick = () => answerGateQuestion(opt.correct);
+        optionsEl.appendChild(btn);
+      });
+
+      modal.classList.remove('hidden');
+    }
+
+    function answerGateQuestion(isCorrect) {
+      const modal = document.getElementById('gameGateModal');
+      modal.classList.add('hidden');
+
+      if (isCorrect) {
+        playBeep('success');
+        confetti({ particleCount: 40, spread: 50, origin: { y: 0.6 } });
+        score += 300;
+        showToast("Correct! Checkpoint Passed!", "+300 Bonus Science Points!", "🏆");
+        if (currentStage < 4) {
+          loadStage(currentStage + 1);
+          gameRunning = true;
+          gameLoop();
+        } else {
+          gameOver(true);
+        }
+      } else {
+        playBeep('error');
+        takeDamage();
+        if (lives > 0) {
+          showToast("Incorrect answer!", "Try again to pass the checkpoint gate.", "❌");
+          pauseForGateQuestion();
+        }
+      }
+    }
+
+    function gameOver(isVictory) {
+      gameRunning = false;
+      const overlay = document.getElementById('gameOverlay');
+      const title = document.getElementById('overlayTitle');
+      const desc = document.getElementById('overlayDesc');
+      const emoji = document.getElementById('overlayEmoji');
+      const btn = document.getElementById('overlayBtn');
+
+      overlay.classList.remove('hidden');
+
+      if (isVictory) {
+        playBeep('success');
+        confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 } });
+        emoji.innerText = "🏆";
+        title.innerText = "Ecosystem Master: Odyssey Complete!";
+        desc.innerText = `Sensational scientific thinking! You completed the full carbon cycle from atmosphere to leaf, herbivore, and decomposer with a final score of ${score}!`;
+        btn.innerText = "Play Again ↺";
+      } else {
+        emoji.innerText = "🥀";
+        title.innerText = "Odyssey Incomplete!";
+        desc.innerText = "Carby ran out of energy before completing the cycle! Review the lesson slides or remediation tips, then jump back into the cycle!";
+        btn.innerText = "Try Again ↺";
+      }
+    }
+
+    const enrichmentScenarios = {
+      normal: {
+        title: "Baseline Earth: Healthy Dynamic Equilibrium",
+        desc: "Producers capture 120 gigatons of carbon each year through photosynthesis. Consumers and decomposers respire an equal amount back into the atmosphere. The carbon cycle remains in sustainable balance.",
+        color: "bg-emerald-50 border-emerald-200 text-emerald-950",
+        stats: "Atmospheric CO₂: 420 ppm • Oxygen: 21% • Food Web Stability: 100%"
+      },
+      nodecomp: {
+        title: "⚠️ What If All Decomposers Vanish?",
+        desc: "Without fungi and bacteria to break down leaf litter and carcasses, carbon remains locked in dead matter. Over decades, atmospheric CO₂ plunges as plants consume remaining supplies. Eventually, plants starve of carbon, collapsing all animal food chains!",
+        color: "bg-rose-50 border-rose-200 text-rose-950",
+        stats: "Atmospheric CO₂: Rapid Decline (<150 ppm) • Detritus Accumulation: Critical • Ecosystem Status: Collapse"
+      },
+      cyanobacteria: {
+        title: "🦠 The Great Oxidation Event (2.4 Billion Years Ago)",
+        desc: "Ancient photosynthetic cyanobacteria in ocean shallows released immense quantities of oxygen as a byproduct of splitting water molecules. This transformed Earth's sky from toxic purple-orange into our oxygen-rich blue atmosphere!",
+        color: "bg-sky-50 border-sky-200 text-sky-950",
+        stats: "Ancient O₂: Climbed from ~0% to 21% • Aerobic Life: Flourished"
+      },
+      biomimicry: {
+        title: "🏥 Medical & Environmental Phytoremediation",
+        desc: "Inspired by how plants safely pull atmospheric molecules and fix them into inert solids, scientists use engineered plants to absorb heavy metals and neutralize hospital environmental runoff—a sustainable biotechnology termed phytoremediation!",
+        color: "bg-purple-50 border-purple-200 text-purple-950",
+        stats: "Biomimicry Application: Natural Filtration • Medical Runoff Treated: 85%"
+      }
+    };
+
+    function setEnrichmentScenario(key) {
+      playBeep('jump');
+      ['normal', 'nodecomp', 'cyanobacteria', 'biomimicry'].forEach(k => {
+        const b = document.getElementById(`btn-scen-${k}`);
+        if (b) {
+          if (k === key) {
+            b.className = "btn-bounce px-4 py-2 rounded-xl text-xs font-bold border transition bg-emerald-600 text-white border-emerald-600";
+          } else {
+            b.className = "btn-bounce px-4 py-2 rounded-xl text-xs font-bold border transition bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200";
+          }
+        }
+      });
+
+      const sc = enrichmentScenarios[key];
+      const card = document.getElementById('enrichmentDisplayCard');
+      card.className = `mt-6 p-6 rounded-2xl border transition-all duration-300 ${sc.color}`;
+      card.innerHTML = `
+        <h4 class="font-black text-base mb-2">${sc.title}</h4>
+        <p class="text-xs leading-relaxed mb-4">${sc.desc}</p>
+        <div class="bg-white/80 backdrop-blur p-3 rounded-xl border border-slate-200 font-bold text-xs">
+          📊 System Metrics: <span class="text-slate-800">${sc.stats}</span>
+        </div>
+      `;
+    }
+
+    function submitExitTicket() {
+      initAudio();
+      const q1 = document.querySelector('input[name="et1"]:checked');
+      const q2 = document.querySelector('input[name="et2"]:checked');
+      const fb = document.getElementById('exitTicketFeedback');
+
+      if (!q1 || !q2) {
+        playBeep('error');
+        fb.classList.remove('hidden');
+        fb.className = "p-4 rounded-xl text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200 mt-4";
+        fb.innerText = "Please answer both questions before checking!";
+        return;
+      }
+
+      let correctCount = 0;
+      if (q1.value === 'B') correctCount++;
+      if (q2.value === 'B') correctCount++;
+
+      fb.classList.remove('hidden');
+      if (correctCount === 2) {
+        playBeep('success');
+        confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+        fb.className = "p-4 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-950 border border-emerald-200 mt-4";
+        fb.innerHTML = `
+          🎉 <strong>Score: 2/2 (100% Mastery)!</strong><br>
+          • <strong>Q1 (Conservation of Mass):</strong> Correct! Reactants carry 18 Oxygen atoms and products contain 18 Oxygen atoms.<br>
+          • <strong>Q2 (Decomposer Role):</strong> Correct! Decomposers recycle carbon; without them, carbon remains trapped forever in dead organic matter.
+        `;
+      } else {
+        playBeep('error');
+        fb.className = "p-4 rounded-xl text-xs font-semibold bg-rose-50 text-rose-950 border border-rose-200 mt-4";
+        fb.innerHTML = `
+          <strong>Score: ${correctCount}/2</strong>. Review the Atom Accounting proof table on Slide 3 or the Decomposer notes on Slide 4, then adjust your choices!
+        `;
+      }
+    }
+
+    function evaluateCER() {
+      initAudio();
+      const claim = document.getElementById('cerClaim').value.trim();
+      const evidence = document.getElementById('cerEvidence').value.trim();
+      const reasoning = document.getElementById('cerReasoning').value.trim();
+      const fb = document.getElementById('cerFeedback');
+
+      fb.classList.remove('hidden');
+
+      if (!claim || !evidence || !reasoning) {
+        playBeep('error');
+        fb.className = "p-4 rounded-xl text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200 mt-4";
+        fb.innerText = "Please complete all three sections (Claim, Evidence, and Reasoning) to run the rubric check!";
+        return;
+      }
+
+      let score = 1; // base point for effort
+      let tips = [];
+
+      // Check keywords for claim
+      if (claim.toLowerCase().includes('oxygen') || claim.toLowerCase().includes('carbon dioxide') || claim.toLowerCase().includes('gas')) {
+        score++;
+      } else {
+        tips.push("Mention specific gases (Oxygen, Carbon Dioxide) in your Claim.");
+      }
+
+      // Check keywords for evidence
+      if (evidence.toLowerCase().includes('ppm') || evidence.toLowerCase().includes('%') || evidence.toLowerCase().includes('increase') || evidence.toLowerCase().includes('decrease') || evidence.toLowerCase().includes('bubble') || evidence.toLowerCase().includes('data')) {
+        score++;
+      } else {
+        tips.push("Cite numerical data or experimental observations (e.g., Lena's 20.9% to 21.6% O₂ or bubble count) in Evidence.");
+      }
+
+      // Check keywords for reasoning
+      if (evidence.toLowerCase().includes('conservation') || reasoning.toLowerCase().includes('mass') || reasoning.toLowerCase().includes('rearranged') || reasoning.toLowerCase().includes('radiant') || reasoning.toLowerCase().includes('chemical')) {
+        score++;
+      } else {
+        tips.push("Connect to the Law of Conservation of Mass or atom rearrangement in your Reasoning.");
+      }
+
+      if (score >= 4) {
+        playBeep('success');
+        confetti({ particleCount: 70, spread: 80, origin: { y: 0.7 } });
+        fb.className = "p-4 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-950 border border-emerald-200 mt-4";
+        fb.innerHTML = `
+          🌟 <strong>Rubric Score: 4/4 (Advanced Scientific Argumentation)!</strong><br>
+          Your CER effectively states a claim, provides quantitative closed-system evidence, and grounds the conclusion in the Law of Conservation of Mass! Excellent Tennessee standard alignment!
+        `;
+      } else {
+        playBeep('jump');
+        fb.className = "p-4 rounded-xl text-xs font-semibold bg-sky-50 text-sky-950 border border-sky-200 mt-4";
+        fb.innerHTML = `
+          <strong>Rubric Score: ${score}/4 (Proficient - Keep Polishing)</strong><br>
+          Suggestions to achieve 4/4:<br>• ${tips.join('<br>• ')}
+        `;
+      }
+    }
+
+    function copyCERToClipboard() {
+      initAudio();
+      const claim = document.getElementById('cerClaim').value;
+      const evidence = document.getElementById('cerEvidence').value;
+      const reasoning = document.getElementById('cerReasoning').value;
+
+      const fullText = `CLAIM: ${claim}\n\nEVIDENCE: ${evidence}\n\nREASONING: ${reasoning}`;
+
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = fullText;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      try {
+        document.execCommand('copy');
+        playBeep('success');
+        showToast("CER Copied to Clipboard!", "Paste into your digital science notebook or Google Classroom.", "📋");
+      } catch (err) {
+        showToast("Copy failed", "Please copy directly from the text boxes.", "⚠️");
+      }
+      document.body.removeChild(tempTextArea);
+    }
+
+    window.onload = function() {
+      showSlide(0);
+      updateBalanceSimulation();
+      setEnrichmentScenario('normal');
+      initGame();
+    };
+  </script>
+</body>
+</html>

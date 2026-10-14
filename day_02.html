@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STEMscopes TN 7.LS1.7 - Day 2: Photosynthesis Evidence & Closed Systems</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tone.js for synthesised sound effects -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+  <!-- Canvas Confetti for celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+            },
+            solar: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            },
+            skychem: {
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+            }
+          },
+          animation: {
+            'float-bubble': 'floatBubble 3s ease-in-out infinite',
+            'pulse-subtle': 'pulseSubtle 2s infinite',
+            'wiggle': 'wiggle 0.5s ease-in-out',
+          },
+          keyframes: {
+            floatBubble: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.85' },
+            },
+            wiggle: {
+              '0%, 100%': { transform: 'rotate(0deg)' },
+              '25%': { transform: 'rotate(-4deg)' },
+              '75%': { transform: 'rotate(4deg)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    .glow-gold {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-brand-200">
+
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-solar-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 font-black text-xl">
+          🌱
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-100 px-2.5 py-0.5 rounded-full border border-brand-200">
+              TN 7.LS1.7 STEMscopes
+            </span>
+            <span class="text-xs font-bold text-slate-400">|</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+              Scope 7: Day 2
+            </span>
+          </div>
+          <h1 class="text-lg sm:text-xl font-extrabold font-display text-slate-800 tracking-tight">
+            Experimental Evidence &amp; Closed Systems
+          </h1>
+        </div>
+      </div>
+
+      <!-- Controls & Game XP -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Audio FX Toggle -->
+        <button id="soundToggleBtn" onclick="toggleAudio()" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-600 flex items-center gap-1.5 transition-all">
+          <span id="soundIcon">🔊</span>
+          <span class="hidden sm:inline" id="soundLabel">Sound: ON</span>
+        </button>
+
+        <!-- Student Mission Score / XP -->
+        <div class="flex items-center bg-gradient-to-r from-amber-50 to-emerald-50 border border-emerald-200/80 px-3 py-1.5 rounded-xl shadow-xs">
+          <span class="text-base mr-1.5 animate-bounce">⭐</span>
+          <div>
+            <div class="text-[10px] uppercase font-bold text-slate-400 leading-none">Lab Mastery XP</div>
+            <div class="text-sm font-black text-slate-800" id="globalScoreText">0 / 500 XP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <nav class="flex space-x-1 sm:space-x-4 overflow-x-auto py-2 custom-scroll text-sm font-semibold text-slate-500">
+        <button onclick="switchTab('exploreTab')" id="tabBtn-exploreTab" class="tab-btn px-3 py-2 rounded-lg text-brand-700 bg-brand-50 border border-brand-200 flex items-center gap-2 whitespace-nowrap transition-colors">
+          <span>🔬</span> Core Lab &amp; Evidence
+        </button>
+        <button onclick="switchTab('remediationTab')" id="tabBtn-remediationTab" class="tab-btn px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2 whitespace-nowrap transition-colors">
+          <span>🛟</span> Remediation Workshop
+        </button>
+        <button onclick="switchTab('enrichmentTab')" id="tabBtn-enrichmentTab" class="tab-btn px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2 whitespace-nowrap transition-colors">
+          <span>🚀</span> NASA Bioregenerative Lab (Enrichment)
+        </button>
+        <button onclick="switchTab('gameTab')" id="tabBtn-gameTab" class="tab-btn px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2 whitespace-nowrap transition-colors relative">
+          <span>🎮</span> Eco-Dome Adventure Quest
+          <span class="bg-solar-500 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shadow-xs animate-pulse">GAME</span>
+        </button>
+        <button onclick="switchTab('quizTab')" id="tabBtn-quizTab" class="tab-btn px-3 py-2 rounded-lg hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2 whitespace-nowrap transition-colors">
+          <span>📝</span> Check For Understanding &amp; CER
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- ========================================================================= -->
+    <!-- TAB 1: CORE LAB & EVIDENCE (Priestley, Elodea Bubbler, Limewater & Fehling) -->
+    <!-- ========================================================================= -->
+    <section id="exploreTab" class="tab-content space-y-6">
+      
+      <!-- Standards & Objective Hero Banner -->
+      <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl select-none pointer-events-none font-bold">🌿</div>
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-3">
+            <span>🔬 Day 2 Guided Investigation</span>
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-black font-display tracking-tight leading-tight mb-2">
+            How Do We Prove What We Cannot Directly See?
+          </h2>
+          <p class="text-emerald-50 text-sm sm:text-base leading-relaxed">
+            Photosynthesis happens at the invisible scale of atoms and molecules! Today we examine the historical 
+            <span class="font-bold underline decoration-solar-400">1772 Priestley Bell Jar</span>, measure aquatic 
+            <span class="font-bold underline decoration-solar-400">Elodea oxygen gas bubbling</span>, and test for carbon dioxide and glucose using 
+            <span class="font-bold underline decoration-solar-400">Limewater &amp; Fehling's chemical indicators</span>.
+          </p>
+
+          <!-- Equation review pill -->
+          <div class="mt-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 inline-flex flex-wrap items-center gap-2 text-xs sm:text-sm font-semibold font-mono">
+            <span class="text-solar-300">6CO₂ (Carbon Dioxide)</span>
+            <span>+</span>
+            <span class="text-blue-200">6H₂O (Water)</span>
+            <span>+</span>
+            <span class="text-amber-200">Light Energy ☀️</span>
+            <span class="text-white font-bold">➔</span>
+            <span class="text-emerald-300">C₆H₁₂O₆ (Glucose Sugar)</span>
+            <span>+</span>
+            <span class="text-cyan-200">6O₂ (Oxygen Gas)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Investigation Sub-Tabs -->
+      <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-4 mb-6">
+          <button onclick="switchLabStation(1)" id="stationBtn-1" class="station-tab-btn px-4 py-2 rounded-xl text-sm font-bold bg-brand-600 text-white shadow-sm flex items-center gap-2">
+            <span>🏺</span> Station 1: Priestley's 1772 Bell Jar
+          </button>
+          <button onclick="switchLabStation(2)" id="stationBtn-2" class="station-tab-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center gap-2">
+            <span>🫧</span> Station 2: Elodea Bubble Counter
+          </button>
+          <button onclick="switchLabStation(3)" id="stationBtn-3" class="station-tab-btn px-4 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center gap-2">
+            <span>🧪</span> Station 3: Chemical Indicator Bench
+          </button>
+        </div>
+
+        <!-- STATION 1: PRIESTLEY'S BELL JAR -->
+        <div id="labStation-1" class="lab-station-view">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Controls & Explanation (Left 5 Cols) -->
+            <div class="lg:col-span-5 space-y-4">
+              <div class="border-l-4 border-brand-500 pl-3">
+                <span class="text-xs font-bold text-brand-700 uppercase tracking-wider">Historical Breakthrough</span>
+                <h3 class="text-xl font-extrabold text-slate-900 font-display">Joseph Priestley's Closed Bell Jar</h3>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                In 1772, English scientist Joseph Priestley investigated what happens inside sealed glass domes (closed systems). He discovered that living plants could 
+                <strong>"restore"</strong> air that had been damaged or injured by burning candles or breathing animals!
+              </p>
+
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Select Experimental Setup:</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button onclick="setPriestleyJar('candle')" id="btnJar-candle" class="jar-choice-btn py-2 px-3 rounded-lg border-2 border-brand-500 bg-brand-50 text-xs font-bold text-brand-800 text-center transition-all">
+                    🕯️ Candle Alone
+                  </button>
+                  <button onclick="setPriestleyJar('mouse')" id="btnJar-mouse" class="jar-choice-btn py-2 px-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 text-center transition-all">
+                    🐭 Mouse Alone
+                  </button>
+                  <button onclick="setPriestleyJar('combo')" id="btnJar-combo" class="jar-choice-btn py-2 px-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 text-center transition-all">
+                    🌱 Mouse + Plant
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sunlight Toggle for Jar -->
+              <div class="flex items-center justify-between p-3 bg-amber-50 rounded-xl border border-amber-200">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">☀️</span>
+                  <div>
+                    <div class="text-xs font-bold text-amber-900">Sunlight Radiant Energy</div>
+                    <div class="text-[11px] text-amber-700">Required for chloroplast activation</div>
+                  </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="priestleyLightToggle" checked onchange="togglePriestleyLight()" class="sr-only peer">
+                  <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                </label>
+              </div>
+
+              <!-- Action Run Button -->
+              <div class="flex gap-2">
+                <button onclick="runPriestleySim()" id="runJarSimBtn" class="flex-1 py-3 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 active:scale-[0.98] text-white font-bold text-sm shadow-md shadow-brand-500/20 transition-all flex items-center justify-center gap-2">
+                  <span>▶️</span> Seal Dome &amp; Run 60-Sec Simulation
+                </button>
+                <button onclick="resetPriestleySim()" class="py-3 px-4 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-600 text-sm font-semibold transition-all">
+                  Reset
+                </button>
+              </div>
+
+              <!-- Real-time Explanation Card -->
+              <div id="priestleyOutputText" class="p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 leading-relaxed font-medium">
+                💡 <strong>Pre-Lab Observation:</strong> Candle requires oxygen to combust. What will happen in a sealed jar once available O₂ runs out? Click <strong>Run</strong> to test.
+              </div>
+            </div>
+
+            <!-- Visual Bell Jar Chamber (Right 7 Cols) -->
+            <div class="lg:col-span-7 bg-gradient-to-b from-sky-50 to-slate-100 border border-slate-200 rounded-2xl p-6 relative overflow-hidden flex flex-col items-center justify-center min-h-[420px]">
+              
+              <!-- Sunlight beam overlay -->
+              <div id="sunbeamOverlay" class="absolute inset-0 bg-gradient-to-b from-amber-300/30 via-amber-200/10 to-transparent pointer-events-none transition-opacity duration-700 opacity-100"></div>
+
+              <!-- Gas gauges HUD -->
+              <div class="w-full grid grid-cols-2 gap-3 mb-4 z-10">
+                <div class="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl border border-slate-200 shadow-xs">
+                  <div class="flex justify-between items-center text-xs font-bold mb-1">
+                    <span class="text-cyan-700 flex items-center gap-1">💨 Oxygen (O₂)</span>
+                    <span id="o2GaugeVal" class="text-cyan-900 font-mono">21.0%</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                    <div id="o2GaugeBar" class="bg-cyan-500 h-2.5 rounded-full transition-all duration-300" style="width: 70%;"></div>
+                  </div>
+                </div>
+
+                <div class="bg-white/90 backdrop-blur-sm p-2.5 rounded-xl border border-slate-200 shadow-xs">
+                  <div class="flex justify-between items-center text-xs font-bold mb-1">
+                    <span class="text-amber-700 flex items-center gap-1">🌫️ Carbon Dioxide (CO₂)</span>
+                    <span id="co2GaugeVal" class="text-amber-900 font-mono">0.04%</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                    <div id="co2GaugeBar" class="bg-amber-500 h-2.5 rounded-full transition-all duration-300" style="width: 15%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Glass Dome Graphic -->
+              <div class="relative w-72 sm:w-80 h-72 border-4 border-slate-300 border-b-8 border-b-slate-600 rounded-t-full bg-sky-200/20 backdrop-blur-xs flex items-end justify-center pb-4 shadow-inner">
+                <!-- Reflection sheen -->
+                <div class="absolute top-4 left-6 w-8 h-44 bg-white/40 rounded-full rotate-12 blur-[1px]"></div>
+                <div class="absolute top-8 right-8 w-4 h-24 bg-white/20 rounded-full -rotate-6"></div>
+
+                <!-- Dome Contents Container -->
+                <div id="jarContents" class="flex items-end justify-center space-x-6 z-10 relative">
+                  
+                  <!-- Candle -->
+                  <div id="jarItem-candle" class="flex flex-col items-center transition-all duration-500">
+                    <div id="candleFlame" class="w-4 h-6 bg-gradient-to-t from-orange-500 via-amber-400 to-yellow-200 rounded-t-full rounded-b-xs shadow-md shadow-amber-400/80 animate-wiggle"></div>
+                    <div class="w-6 h-14 bg-amber-100 border border-amber-300 rounded-t-sm shadow-xs"></div>
+                    <div class="w-10 h-2 bg-amber-800 rounded-full mt-0.5"></div>
+                  </div>
+
+                  <!-- Mouse -->
+                  <div id="jarItem-mouse" class="hidden flex-col items-center transition-all duration-500">
+                    <div id="mouseGraphic" class="text-4xl filter drop-shadow-md select-none transition-transform duration-500">
+                      🐭
+                    </div>
+                    <div id="mouseStatusTag" class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full mt-1">
+                      Breathing normally
+                    </div>
+                  </div>
+
+                  <!-- Plant -->
+                  <div id="jarItem-plant" class="hidden flex-col items-center transition-all duration-500">
+                    <div id="plantGraphic" class="text-5xl filter drop-shadow-md select-none">
+                      🪴
+                    </div>
+                    <div id="plantStatusTag" class="text-[10px] font-bold text-brand-700 bg-brand-100 px-2 py-0.5 rounded-full mt-1">
+                      Photosynthesizing
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Animated Gas Bubbles / Molecules in Air -->
+                <div id="gasMoleculeContainer" class="absolute inset-0 pointer-events-none overflow-hidden rounded-t-full"></div>
+              </div>
+
+              <!-- Bottom pedestal -->
+              <div class="w-80 sm:w-96 h-6 bg-slate-700 rounded-b-xl shadow-lg flex items-center justify-center text-[10px] text-slate-300 font-mono tracking-widest uppercase">
+                AIR-TIGHT CLOSED SYSTEM SEAL
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- STATION 2: ELODEA BUBBLE COUNTER -->
+        <div id="labStation-2" class="lab-station-view hidden">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <div class="lg:col-span-5 space-y-4">
+              <div class="border-l-4 border-skychem-500 pl-3">
+                <span class="text-xs font-bold text-skychem-600 uppercase tracking-wider">Quantitative Data Gathering</span>
+                <h3 class="text-xl font-extrabold text-slate-900 font-display">Aquatic Plant (Elodea) Bubbling</h3>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                When aquatic plants like <em>Elodea</em> carry out photosynthesis, they release visible <strong>oxygen gas bubbles (O₂)</strong> from cut stems. Counting these bubbles per minute provides direct quantitative evidence of the photosynthetic rate!
+              </p>
+
+              <!-- Distance from Lamp Slider -->
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                <div class="flex justify-between items-center">
+                  <label class="text-xs font-bold uppercase tracking-wider text-slate-700">Lamp Distance (Independent Variable):</label>
+                  <span id="lampDistanceDisplay" class="text-sm font-extrabold text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200">10 cm (High Light)</span>
+                </div>
+                <input type="range" id="lampDistSlider" min="10" max="60" step="10" value="10" oninput="updateElodeaDistance(this.value)" class="w-full accent-amber-500 cursor-pointer">
+                <div class="flex justify-between text-[11px] font-semibold text-slate-400">
+                  <span>10 cm (Bright)</span>
+                  <span>30 cm (Medium)</span>
+                  <span>60 cm (Dim)</span>
+                </div>
+              </div>
+
+              <!-- Timer and Bubble counter tool -->
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-cyan-50 border border-cyan-200 rounded-xl p-3 text-center">
+                  <div class="text-[11px] font-bold text-cyan-700 uppercase">Bubbles Counted</div>
+                  <div id="bubbleLiveCount" class="text-2xl font-black text-cyan-900 font-mono my-1">0</div>
+                  <div class="text-[10px] text-cyan-600">Visible O₂ Gas Output</div>
+                </div>
+
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center">
+                  <div class="text-[11px] font-bold text-emerald-700 uppercase">Rate per Minute</div>
+                  <div id="bubbleRateExpected" class="text-2xl font-black text-emerald-900 font-mono my-1">~48 bpm</div>
+                  <div class="text-[10px] text-emerald-600">Calculated Velocity</div>
+                </div>
+              </div>
+
+              <div class="flex gap-2">
+                <button onclick="startElodeaTimer()" id="elodeaTimerBtn" class="flex-1 py-3 px-4 rounded-xl bg-skychem-600 hover:bg-skychem-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                  <span>⏱️</span> Start 30-Second Bubble Run
+                </button>
+                <button onclick="recordElodeaDataPoint()" class="py-3 px-4 rounded-xl border border-skychem-200 bg-skychem-50 hover:bg-skychem-100 text-skychem-800 text-xs font-bold transition-all">
+                  📊 Log Table Row
+                </button>
+              </div>
+
+              <!-- Data Table -->
+              <div class="bg-white rounded-xl border border-slate-200 overflow-hidden text-xs">
+                <div class="bg-slate-100 px-3 py-2 font-bold text-slate-700 border-b border-slate-200">
+                  Student Bubble Observation Log
+                </div>
+                <table class="w-full text-left">
+                  <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+                    <tr>
+                      <th class="px-3 py-1.5">Distance</th>
+                      <th class="px-3 py-1.5">Light Intensity</th>
+                      <th class="px-3 py-1.5 text-right">Bubbles / Min</th>
+                    </tr>
+                  </thead>
+                  <tbody id="elodeaTableBody" class="divide-y divide-slate-100 font-mono">
+                    <tr class="bg-emerald-50/50">
+                      <td class="px-3 py-1.5 font-bold text-slate-700">10 cm</td>
+                      <td class="px-3 py-1.5 text-amber-700 font-sans font-semibold">High (100%)</td>
+                      <td class="px-3 py-1.5 text-right font-bold text-brand-700">48</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+
+            <!-- Visual Beaker & Lamp Simulator (Right 7 Cols) -->
+            <div class="lg:col-span-7 bg-slate-900 rounded-2xl p-6 relative overflow-hidden flex flex-col items-center justify-center min-h-[440px]">
+              
+              <!-- Light Source Lamp positioned dynamically -->
+              <div id="deskLampContainer" class="absolute top-6 left-6 z-20 flex items-center transition-all duration-500">
+                <div class="text-4xl filter drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]">💡</div>
+                <div id="lampGlowBeam" class="w-48 sm:w-64 h-32 bg-gradient-to-r from-amber-300/40 via-yellow-200/20 to-transparent blur-md transform origin-left"></div>
+              </div>
+
+              <!-- Beaker Container -->
+              <div class="relative w-64 h-72 border-4 border-t-0 border-sky-300/50 rounded-b-3xl bg-sky-900/40 backdrop-blur-sm mt-12 flex flex-col justify-end p-4 shadow-2xl overflow-hidden">
+                
+                <!-- Water level sheen -->
+                <div class="absolute top-4 inset-x-0 h-4 border-b border-sky-200/40 bg-sky-400/20 rounded-full animate-pulse"></div>
+
+                <!-- Bubbles Canvas / Container -->
+                <div id="elodeaBubbleStream" class="absolute inset-0 pointer-events-none"></div>
+
+                <!-- Inverted Funnel & Test tube for gas collection -->
+                <div class="absolute top-6 left-1/2 -translate-x-1/2 w-10 h-28 border-2 border-slate-300/60 bg-white/10 rounded-t-md flex flex-col items-center justify-end overflow-hidden">
+                  <!-- Collected Gas Pocket -->
+                  <div id="collectedGasPocket" class="w-full bg-cyan-400/40 transition-all duration-300" style="height: 15px;"></div>
+                  <div class="text-[8px] text-white/80 font-mono text-center">O₂ GAS</div>
+                </div>
+
+                <!-- Submerged Elodea Plant -->
+                <div class="relative z-10 flex flex-col items-center">
+                  <!-- Cut Stem with bubble origin point -->
+                  <div id="stemCutPoint" class="w-2.5 h-2.5 bg-emerald-400 rounded-full border border-white shadow-xs"></div>
+                  <!-- Elodea Leaf Sprigs -->
+                  <div class="text-6xl filter drop-shadow-lg select-none">
+                    🌿
+                  </div>
+                </div>
+
+                <!-- Water volume label -->
+                <div class="absolute bottom-2 right-3 text-[10px] text-sky-200 font-mono">
+                  H₂O + NaHCO₃ (Dissolved CO₂)
+                </div>
+              </div>
+
+              <div class="text-xs text-slate-300 font-medium mt-3 flex items-center gap-2">
+                <span>🔬</span> Quantitative Rule: <em>Closer light source = Greater photon energy = Faster O₂ bubble generation</em>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- STATION 3: CHEMICAL INDICATOR BENCH -->
+        <div id="labStation-3" class="lab-station-view hidden">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <div class="lg:col-span-5 space-y-4">
+              <div class="border-l-4 border-amber-500 pl-3">
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Molecular Verification</span>
+                <h3 class="text-xl font-extrabold text-slate-900 font-display">Chemical Indicators Bench</h3>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Because molecules like <strong>Carbon Dioxide (CO₂)</strong> and <strong>Glucose (C₆H₁₂O₆)</strong> are invisible, scientists rely on 
+                <strong>chemical indicators</strong> that produce visible color shifts or precipitates upon reaction!
+              </p>
+
+              <!-- Indicator Selection Cards -->
+              <div class="grid grid-cols-2 gap-3">
+                <button onclick="selectChemicalTest('limewater')" id="btnTest-limewater" class="p-3 rounded-xl border-2 border-brand-500 bg-brand-50 text-left transition-all">
+                  <div class="flex items-center gap-1.5 font-bold text-xs text-brand-900 mb-1">
+                    <span>🥛</span> Limewater Test
+                  </div>
+                  <div class="text-[11px] text-slate-500">Detects Carbon Dioxide (CO₂) gas</div>
+                </button>
+
+                <button onclick="selectChemicalTest('fehling')" id="btnTest-fehling" class="p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all">
+                  <div class="flex items-center gap-1.5 font-bold text-xs text-slate-800 mb-1">
+                    <span>🔥</span> Fehling's Test
+                  </div>
+                  <div class="text-[11px] text-slate-500">Detects Reducing Sugars (Glucose)</div>
+                </button>
+              </div>
+
+              <!-- Contextual Action Panel -->
+              <div id="indicatorContextPanel" class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                <!-- Limewater Controls -->
+                <div id="limewaterControls" class="space-y-2">
+                  <label class="text-xs font-bold text-slate-700">Choose Sample to Bubble Through Limewater:</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <button onclick="testLimewaterSample('breath')" class="py-2 px-3 rounded-lg bg-white border border-slate-300 hover:border-slate-400 text-xs font-semibold text-slate-700">
+                      🗣️ Human Breath (Respiration)
+                    </button>
+                    <button onclick="testLimewaterSample('plant-sun')" class="py-2 px-3 rounded-lg bg-white border border-slate-300 hover:border-slate-400 text-xs font-semibold text-slate-700">
+                      🌿 Plant in Bright Sunlight
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Fehling's Controls -->
+                <div id="fehlingControls" class="space-y-2 hidden">
+                  <label class="text-xs font-bold text-slate-700">Choose Leaf Extract for Hot Water Bath:</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <button onclick="testFehlingSample('sun-leaf')" class="py-2 px-3 rounded-lg bg-white border border-slate-300 hover:border-slate-400 text-xs font-semibold text-slate-700">
+                      ☀️ Sun-Exposed Leaf Extract
+                    </button>
+                    <button onclick="testFehlingSample('dark-leaf')" class="py-2 px-3 rounded-lg bg-white border border-slate-300 hover:border-slate-400 text-xs font-semibold text-slate-700">
+                      🌑 Dark-Closet Leaf Extract
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Indicator Explanation Note -->
+              <div id="indicatorResultNotice" class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed font-medium">
+                🧪 <strong>Chemical Principle:</strong> Clear Limewater (Calcium Hydroxide) reacts with CO₂ to form an insoluble milky precipitate of Calcium Carbonate ($CaCO_3$).
+              </div>
+
+            </div>
+
+            <!-- Visual Test Tube & Burner Bench (Right 7 Cols) -->
+            <div class="lg:col-span-7 bg-gradient-to-b from-slate-100 to-slate-200 border border-slate-300 rounded-2xl p-6 relative flex flex-col items-center justify-center min-h-[440px] shadow-inner">
+              
+              <div class="w-full flex justify-between items-center mb-6 px-4">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest font-mono">LAB BENCH: REAGENT REACTION RACK</span>
+                <span id="reactionStatusBadge" class="text-xs font-extrabold text-blue-700 bg-blue-100 border border-blue-300 px-2.5 py-0.5 rounded-full">
+                  Status: Ready
+                </span>
+              </div>
+
+              <!-- Main Test-tube Rack Visualization -->
+              <div class="relative flex items-end justify-center space-x-12 pb-6">
+                
+                <!-- Tube A (Control / Standard) -->
+                <div class="flex flex-col items-center">
+                  <div class="w-14 h-48 border-2 border-t-0 border-slate-400 rounded-b-full bg-white/40 backdrop-blur-xs flex flex-col justify-end p-1 relative overflow-hidden shadow-md">
+                    <!-- Liquid in Tube A -->
+                    <div id="tubeLiquidA" class="w-full h-32 rounded-b-full transition-all duration-700 bg-sky-200/40"></div>
+                  </div>
+                  <span class="text-[11px] font-bold text-slate-600 mt-2" id="tubeLabelA">Clear Control</span>
+                </div>
+
+                <!-- Tube B (Experimental Test Tube) -->
+                <div class="flex flex-col items-center relative">
+                  <!-- Bunsen Burner Flame (for Fehling's test) -->
+                  <div id="burnerFlame" class="hidden absolute -bottom-10 w-8 h-10 bg-gradient-to-t from-blue-600 via-amber-400 to-yellow-200 rounded-t-full blur-[1px] animate-wiggle"></div>
+
+                  <div class="w-14 h-48 border-2 border-t-0 border-slate-400 rounded-b-full bg-white/40 backdrop-blur-xs flex flex-col justify-end p-1 relative overflow-hidden shadow-md">
+                    <!-- Liquid in Tube B with dynamic color / precipitate particles -->
+                    <div id="tubeLiquidB" class="w-full h-32 rounded-b-full transition-all duration-700 bg-sky-200/40 relative">
+                      <!-- Precipitate speckles -->
+                      <div id="precipitateDots" class="absolute inset-0 hidden"></div>
+                    </div>
+                  </div>
+                  <span class="text-[11px] font-bold text-slate-600 mt-2" id="tubeLabelB">Reaction Sample</span>
+                </div>
+
+              </div>
+
+              <!-- Wooden Rack Graphic Base -->
+              <div class="w-72 sm:w-80 h-4 bg-amber-800 rounded-t-sm shadow-md"></div>
+              <div class="w-80 sm:w-96 h-3 bg-amber-950 rounded-b-md shadow-lg"></div>
+
+              <!-- Scientific takeaway banner -->
+              <div id="indicatorConclusionBanner" class="mt-6 text-xs text-slate-700 bg-white/80 border border-slate-200 px-4 py-2 rounded-xl text-center font-medium max-w-md">
+                Select a sample above to view molecular reaction &amp; precipitate formation!
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: REMEDIATION WORKSHOP (Targeted Support & Misconception Buster) -->
+    <!-- ========================================================================= -->
+    <section id="remediationTab" class="tab-content hidden space-y-6">
+      
+      <!-- Remediation Header Banner -->
+      <div class="bg-gradient-to-r from-teal-500 to-emerald-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide mb-2">
+            <span>🛟 Step-by-Step Concept Builder</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-display">
+            Need a Boost? Let’s Make Gas Exchange Crystal Clear!
+          </h2>
+          <p class="text-teal-50 text-sm mt-1">
+            Break down the big ideas into simple pieces: What goes in, what comes out, and what happens in the dark?
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Misconception Buster Card 1 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold text-lg">
+              ❌
+            </div>
+            <div>
+              <span class="text-xs font-bold text-red-600 uppercase tracking-wider">Common Misconception</span>
+              <h3 class="font-bold text-slate-800">"Plants only do photosynthesis and never breathe oxygen."</h3>
+            </div>
+          </div>
+          
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-xs sm:text-sm text-emerald-950 space-y-2">
+            <p class="font-bold text-emerald-900 flex items-center gap-1.5">
+              <span>✅</span> The Scientific Truth:
+            </p>
+            <p>
+              Plants undergo <strong>both</strong> photosynthesis AND cellular respiration!
+            </p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+              <li><strong>During the Day (Light):</strong> Photosynthesis runs fast, consuming lots of CO₂ and releasing huge amounts of O₂.</li>
+              <li><strong>During the Night (Darkness):</strong> Without sunlight, photosynthesis stops! Plants still need energy to live, so they consume O₂ and release CO₂ through cellular respiration.</li>
+            </ul>
+          </div>
+
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600">
+            <strong>Check your thinking:</strong> Why did the plant in the dark closet sealed jar wilt and reduce oxygen levels over 24 hours? <em>Because it could only respire, not photosynthesize!</em>
+          </div>
+        </div>
+
+        <!-- Misconception Buster Card 2 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">
+              ⚖️
+            </div>
+            <div>
+              <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Concept Drill</span>
+              <h3 class="font-bold text-slate-800">The "Closed System" Rule</h3>
+            </div>
+          </div>
+
+          <div class="bg-sky-50 border border-sky-200 rounded-xl p-4 text-xs sm:text-sm text-sky-950 space-y-2">
+            <p class="font-bold text-sky-900 flex items-center gap-1.5">
+              <span>🔒</span> Definition:
+            </p>
+            <p>
+              A <strong>Closed System</strong> is a sealed container where <strong>no matter (atoms/gas)</strong> can enter or leave. However, <strong>radiant energy (sunlight)</strong> can pass right through clear glass!
+            </p>
+            <div class="mt-2 grid grid-cols-2 gap-2 text-xs">
+              <div class="p-2 bg-white rounded-lg border border-sky-200 text-center">
+                <span class="font-bold text-emerald-700">Autotroph (Plant)</span><br>
+                Consumes CO₂ ➔ Produces O₂
+              </div>
+              <div class="p-2 bg-white rounded-lg border border-sky-200 text-center">
+                <span class="font-bold text-amber-700">Heterotroph (Animal)</span><br>
+                Consumes O₂ ➔ Produces CO₂
+              </div>
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600">
+            <strong>Key Priestley Takeaway:</strong> An animal alone suffocates; a plant alone in darkness wilts; but together in sunlight, their gas outputs sustain each other!
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Interactive Remediation Match Activity -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Quick Practice</span>
+            <h3 class="text-lg font-bold text-slate-800 font-display">Match the Evidence to the Scientific Claim</h3>
+          </div>
+          <button onclick="resetMatchingDrill()" class="text-xs font-bold text-slate-500 hover:text-slate-800 underline">
+            Reset Drill
+          </button>
+        </div>
+
+        <p class="text-xs text-slate-600">
+          Click an <strong>Evidence Tool</strong> on the left, then click its corresponding <strong>Photosynthesis Proof</strong> on the right!
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Left side: Items -->
+          <div class="space-y-2" id="matchingLeftCol">
+            <div onclick="selectMatchItem('priestley', this)" class="match-item p-3 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-slate-50 cursor-pointer text-xs font-semibold text-slate-700 transition-all flex items-center justify-between">
+              <span>🏺 Priestley's Mouse + Mint Jar</span>
+              <span class="text-slate-400 font-mono text-[10px]">#1</span>
+            </div>
+            <div onclick="selectMatchItem('elodea', this)" class="match-item p-3 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-slate-50 cursor-pointer text-xs font-semibold text-slate-700 transition-all flex items-center justify-between">
+              <span>🫧 Counting Elodea Bubbles per Minute</span>
+              <span class="text-slate-400 font-mono text-[10px]">#2</span>
+            </div>
+            <div onclick="selectMatchItem('limewater', this)" class="match-item p-3 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-slate-50 cursor-pointer text-xs font-semibold text-slate-700 transition-all flex items-center justify-between">
+              <span>🥛 Limewater Solution clears near plant</span>
+              <span class="text-slate-400 font-mono text-[10px]">#3</span>
+            </div>
+            <div onclick="selectMatchItem('fehling', this)" class="match-item p-3 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-slate-50 cursor-pointer text-xs font-semibold text-slate-700 transition-all flex items-center justify-between">
+              <span>🔥 Fehling's heated leaf turns brick-red</span>
+              <span class="text-slate-400 font-mono text-[10px]">#4</span>
+            </div>
+          </div>
+
+          <!-- Right side: Targets -->
+          <div class="space-y-2" id="matchingRightCol">
+            <div onclick="checkMatchTarget('elodea', this)" class="target-item p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white cursor-pointer text-xs text-slate-600 transition-all">
+              Provides direct quantitative data of oxygen gas release rate under light.
+            </div>
+            <div onclick="checkMatchTarget('fehling', this)" class="target-item p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white cursor-pointer text-xs text-slate-600 transition-all">
+              Confirms the presence of synthesized glucose sugars (stored chemical energy).
+            </div>
+            <div onclick="checkMatchTarget('priestley', this)" class="target-item p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white cursor-pointer text-xs text-slate-600 transition-all">
+              Proves plants restore injured air by replacing consumed oxygen in a closed system.
+            </div>
+            <div onclick="checkMatchTarget('limewater', this)" class="target-item p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white cursor-pointer text-xs text-slate-600 transition-all">
+              Demonstrates that active photosynthesizing plants consume carbon dioxide gas.
+            </div>
+          </div>
+        </div>
+
+        <div id="matchFeedbackNotice" class="text-xs font-bold text-center text-slate-500 pt-2">
+          Click an item on the left to begin matching!
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 3: ENRICHMENT LAB (NASA Mars Bioregenerative Life Support) -->
+    <!-- ========================================================================= -->
+    <section id="enrichmentTab" class="tab-content hidden space-y-6">
+      
+      <div class="bg-gradient-to-r from-indigo-900 via-slate-900 to-cyan-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute -right-8 -top-8 text-8xl opacity-20 pointer-events-none">🚀</div>
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-indigo-500/30 border border-indigo-400/40 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase mb-2">
+            <span>🚀 NASA Advanced Life Support Engineering</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-display">
+            The Mars Bio-Habitat Challenge: Closed Loop Systems
+          </h2>
+          <p class="text-indigo-200 text-sm mt-1">
+            Applying 7th-grade science to interplanetary exploration! How does NASA use closed-system photosynthesis 
+            to supply continuous oxygen and food for astronauts on Mars?
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Controls & NASA Mission Parameters (Left 5 Cols) -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <div class="border-l-4 border-indigo-600 pl-3">
+            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider">Habitat Controls</span>
+            <h3 class="text-lg font-bold text-slate-800">Martian Dome Life-Support Tuning</h3>
+          </div>
+
+          <p class="text-xs text-slate-600 leading-relaxed">
+            In deep space, resupply from Earth takes 9 months! Astronauts consume <strong>840 grams of O₂ per sol</strong> and exhale <strong>1,000 grams of CO₂</strong>. Balance the habitat's algal photobioreactors and grow-lights!
+          </p>
+
+          <!-- Astronaut crew size -->
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1">
+              <span class="text-slate-700">👨‍🚀 Astronaut Crew Members:</span>
+              <span id="crewSizeVal" class="text-indigo-700 font-mono">2 Astronauts</span>
+            </div>
+            <input type="range" id="crewSlider" min="1" max="4" value="2" oninput="updateHabitatParams()" class="w-full accent-indigo-600 cursor-pointer">
+          </div>
+
+          <!-- Algae / Plant Trays -->
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1">
+              <span class="text-slate-700">🌱 Chlorella Algal Bioreactor Trays:</span>
+              <span id="algaeTraysVal" class="text-emerald-700 font-mono">4 Units</span>
+            </div>
+            <input type="range" id="algaeSlider" min="1" max="8" value="4" oninput="updateHabitatParams()" class="w-full accent-emerald-600 cursor-pointer">
+          </div>
+
+          <!-- LED Light Intensity -->
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1">
+              <span class="text-slate-700">💡 LED Grow-Light Photons:</span>
+              <span id="growLightVal" class="text-amber-700 font-mono">80% Intensity</span>
+            </div>
+            <input type="range" id="growLightSlider" min="20" max="100" step="10" value="80" oninput="updateHabitatParams()" class="w-full accent-amber-500 cursor-pointer">
+          </div>
+
+          <!-- Real-Time Atmospheric Balance Status -->
+          <div id="habitatStatusBox" class="p-3.5 rounded-xl border text-xs font-medium space-y-1 bg-emerald-50 border-emerald-200 text-emerald-950">
+            <div class="font-bold text-emerald-800 flex items-center gap-1.5">
+              <span>✅</span> Stable Closed-Loop Equilibrium
+            </div>
+            <p>Oxygen production matches crew metabolic consumption! The closed system is sustainable.</p>
+          </div>
+
+          <button onclick="awardEnrichmentBadge()" id="enrichmentClaimBtn" class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition-all">
+            🏅 Verify Equilibrium &amp; Claim 100 XP
+          </button>
+        </div>
+
+        <!-- Habitat Simulation Visuals (Right 7 Cols) -->
+        <div class="lg:col-span-7 bg-slate-950 rounded-2xl p-6 text-white border border-slate-800 relative min-h-[420px] flex flex-col justify-between overflow-hidden">
+          
+          <div class="flex justify-between items-center text-xs font-mono">
+            <span class="text-indigo-400">MARS DOME 7 - ATMOSPHERIC HUD</span>
+            <span class="text-emerald-400 animate-pulse">● LIVE TELEMETRY</span>
+          </div>
+
+          <!-- Visual Bio-dome graphic -->
+          <div class="relative flex items-center justify-center my-6">
+            <div class="w-64 h-64 border-4 border-indigo-400/40 rounded-full bg-indigo-900/20 backdrop-blur-sm relative flex items-center justify-center shadow-[0_0_50px_rgba(99,102,241,0.2)]">
+              <!-- Crew and Plants inside -->
+              <div id="domeCrewIcons" class="text-3xl flex gap-1 z-10">
+                👨‍🚀👩‍🚀
+              </div>
+              <div id="domePlantIcons" class="text-4xl absolute bottom-6 z-10">
+                🌿🌱🌿
+              </div>
+              <!-- Floating Gas Indicators -->
+              <div class="absolute top-8 text-[11px] font-mono text-cyan-300 bg-slate-900/80 px-2 py-0.5 rounded-full border border-cyan-500/40">
+                O₂: <span id="habitatO2Val">20.9%</span>
+              </div>
+              <div class="absolute bottom-8 text-[11px] font-mono text-amber-300 bg-slate-900/80 px-2 py-0.5 rounded-full border border-amber-500/40">
+                CO₂: <span id="habitatCO2Val">0.05%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Math connection breakdown for 7th grade enrichment -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs space-y-1">
+            <div class="font-bold text-slate-300 font-mono text-[10px] uppercase">Photosynthetic Conservation Equation</div>
+            <p class="text-slate-400 text-[11px]">
+              For every 6 molecules of CO₂ scrubbed by the hydroponic algae, 6 molecules of O₂ are recycled and 1 molecule of glucose is stored as plant biomass food!
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 4: ADVENTURE GAME ("The Eco-Dome Rescue: Priestley's Secret") -->
+    <!-- ========================================================================= -->
+    <section id="gameTab" class="tab-content hidden space-y-6">
+      
+      <!-- Game Top Status Bar -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-solar-400 flex items-center justify-center text-white text-2xl shadow-md">
+            🛡️
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-brand-700 bg-brand-100 px-2.5 py-0.5 rounded-full">
+                Interactive Science RPG
+              </span>
+              <span id="gameChamberBadge" class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200">
+                Chamber 1 of 4
+              </span>
+            </div>
+            <h2 class="text-xl font-extrabold text-slate-800 font-display">
+              Eco-Dome Rescue: Priestley's Secret
+            </h2>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <!-- Life Support Dome Stability Meter -->
+          <div class="w-36 sm:w-44">
+            <div class="flex justify-between items-center text-xs font-bold mb-1">
+              <span class="text-slate-600">Dome Stability:</span>
+              <span id="gameStabilityText" class="text-emerald-700 font-mono">100%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+              <div id="gameStabilityBar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-300" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <!-- Inventory items bag -->
+          <div class="flex gap-1.5">
+            <span id="badgePriestley" title="Priestley's Bell Jar Key" class="w-9 h-9 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-base opacity-30 grayscale transition-all">🏺</span>
+            <span id="badgeElodea" title="Photonic Bubble Crystal" class="w-9 h-9 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-base opacity-30 grayscale transition-all">🫧</span>
+            <span id="badgeLimewater" title="Limewater Purifier" class="w-9 h-9 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-base opacity-30 grayscale transition-all">🥛</span>
+            <span id="badgeFehling" title="Fehling's Glucose Prism" class="w-9 h-9 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center text-base opacity-30 grayscale transition-all">🔥</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Game Arena -->
+      <div id="gameArenaCard" class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-8 min-h-[480px] flex flex-col justify-between relative overflow-hidden">
+        
+        <!-- Game Screen Level 1: Priestley Chamber -->
+        <div id="gameLevel-1" class="game-level-view space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="text-4xl p-3 bg-amber-50 border border-amber-200 rounded-2xl">🏺</div>
+            <div>
+              <span class="text-xs font-bold text-amber-600 uppercase tracking-widest font-mono">QUEST LEVEL 1</span>
+              <h3 class="text-xl font-black text-slate-800 font-display">The Chamber of the Suffocating Bell Jar</h3>
+              <p class="text-sm text-slate-600 mt-1">
+                You step into the historical archives of Station 72. Emergency alarms blare! An ancient sealed dome has lost its oxygen balance. 
+                A lab mouse is trapped inside with a dying candle! What must you introduce into this closed system under direct sunlight to rescue it?
+              </p>
+            </div>
+          </div>
+
+          <!-- Visual scenario display -->
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-6 text-center">
+            <div class="text-6xl mb-2 animate-bounce">🐭🕯️❓</div>
+            <div class="text-xs font-bold text-amber-900">Sealed Jar: Oxygen Depleting rapidly!</div>
+          </div>
+
+          <!-- Interactive choices -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button onclick="submitGameChoice(1, 'A')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-brand-700 block mb-1">OPTION A</span>
+              <span class="text-sm text-slate-700">Add a vigorous Mint Plant and expose the dome to direct sunlight.</span>
+            </button>
+            <button onclick="submitGameChoice(1, 'B')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">OPTION B</span>
+              <span class="text-sm text-slate-700">Place an extra burning candle inside to consume the excess smoke.</span>
+            </button>
+            <button onclick="submitGameChoice(1, 'C')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">OPTION C</span>
+              <span class="text-sm text-slate-700">Put a mint plant inside, but wrap the entire dome in dark black foil.</span>
+            </button>
+            <button onclick="submitGameChoice(1, 'D')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">OPTION D</span>
+              <span class="text-sm text-slate-700">Add dry soil and a bag of chemical fertilizers to the bottom.</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Game Screen Level 2: Aquatic Elodea Chamber -->
+        <div id="gameLevel-2" class="game-level-view hidden space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="text-4xl p-3 bg-cyan-50 border border-cyan-200 rounded-2xl">🫧</div>
+            <div>
+              <span class="text-xs font-bold text-cyan-600 uppercase tracking-widest font-mono">QUEST LEVEL 2</span>
+              <h3 class="text-xl font-black text-slate-800 font-display">The Hydro-Canal Bubble Accelerator</h3>
+              <p class="text-sm text-slate-600 mt-1">
+                You enter the hydroponics water canal. The station needs <strong>at least 45 oxygen bubbles per minute</strong> to pressurize Sector 4! 
+                The desk lamps are currently placed 50 cm away and the bubbling has slowed to a crawl. How should you adjust the radiant energy?
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-sky-50 to-cyan-50 border border-cyan-200 rounded-2xl p-6 text-center">
+            <div class="text-6xl mb-2 animate-pulse">🌿💡💧</div>
+            <div class="text-xs font-bold text-cyan-900">Current Bubble Rate: Only 12 bubbles/min (Too slow!)</div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button onclick="submitGameChoice(2, 'A')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-brand-700 block mb-1">ACTION A</span>
+              <span class="text-sm text-slate-700">Move the high-intensity lamp closer (to 10 cm) to increase radiant energy photons.</span>
+            </button>
+            <button onclick="submitGameChoice(2, 'B')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">ACTION B</span>
+              <span class="text-sm text-slate-700">Move the lamp further back to 80 cm so the plant doesn't get sunburned.</span>
+            </button>
+            <button onclick="submitGameChoice(2, 'C')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">ACTION C</span>
+              <span class="text-sm text-slate-700">Turn off all lights to allow the plant to relax and bubble overnight.</span>
+            </button>
+            <button onclick="submitGameChoice(2, 'D')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">ACTION D</span>
+              <span class="text-sm text-slate-700">Drain the water out of the canal so the leaves touch dry air directly.</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Game Screen Level 3: Limewater & Fehling Reagent Gate -->
+        <div id="gameLevel-3" class="game-level-view hidden space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="text-4xl p-3 bg-purple-50 border border-purple-200 rounded-2xl">🧪</div>
+            <div>
+              <span class="text-xs font-bold text-purple-600 uppercase tracking-widest font-mono">QUEST LEVEL 3</span>
+              <h3 class="text-xl font-black text-slate-800 font-display">The Chemical Crypt: Indicator Verification</h3>
+              <p class="text-sm text-slate-600 mt-1">
+                The airlock requires two chemical verifications before unlocking the core. You test a gas sample with <strong>Limewater</strong> and a leaf extract with heated <strong>Fehling's Solution</strong>. 
+                Which observation confirms that photosynthesis is actively consuming reactant gas and storing chemical sugar energy?
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-6 text-center">
+            <div class="text-6xl mb-2">🥛🔥✨</div>
+            <div class="text-xs font-bold text-purple-900">Airlock Lockout: Verify Reactant &amp; Product Chemistry</div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button onclick="submitGameChoice(3, 'A')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-brand-700 block mb-1">COMBINATION A</span>
+              <span class="text-sm text-slate-700">Limewater stays clear (plant absorbed CO₂) &amp; Fehling's turns brick-red (glucose present).</span>
+            </button>
+            <button onclick="submitGameChoice(3, 'B')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">COMBINATION B</span>
+              <span class="text-sm text-slate-700">Limewater turns dark purple and Fehling's stays blue without heating.</span>
+            </button>
+            <button onclick="submitGameChoice(3, 'C')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">COMBINATION C</span>
+              <span class="text-sm text-slate-700">Limewater produces gasoline and Fehling's solution turns into liquid nitrogen.</span>
+            </button>
+            <button onclick="submitGameChoice(3, 'D')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">COMBINATION D</span>
+              <span class="text-sm text-slate-700">Both indicators remain frozen with zero color change under all circumstances.</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Game Screen Level 4: Final Eco-Pod Equilibrium -->
+        <div id="gameLevel-4" class="game-level-view hidden space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="text-4xl p-3 bg-emerald-50 border border-emerald-200 rounded-2xl">🌍</div>
+            <div>
+              <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest font-mono">FINAL BOSS LEVEL</span>
+              <h3 class="text-xl font-black text-slate-800 font-display">The Central Closed-System Core</h3>
+              <p class="text-sm text-slate-600 mt-1">
+                You reach the main biosphere engine! You must choose the permanent configuration for the station's sealed life-support pod that can flourish indefinitely without external gas resupply:
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-6 text-center">
+            <div class="text-6xl mb-2 animate-bounce">🌿🦗☀️💧</div>
+            <div class="text-xs font-bold text-emerald-900">Final Decision: Self-Sustaining Biome Configuration</div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button onclick="submitGameChoice(4, 'A')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-brand-700 block mb-1">CONFIGURATION A</span>
+              <span class="text-sm text-slate-700">Sealed glass dome with autotrophs (mint plants), heterotrophs (grasshopper), water, and continuous solar energy cycles.</span>
+            </button>
+            <button onclick="submitGameChoice(4, 'B')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">CONFIGURATION B</span>
+              <span class="text-sm text-slate-700">A completely dark concrete bunker filled only with grasshoppers and dry sand.</span>
+            </button>
+            <button onclick="submitGameChoice(4, 'C')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">CONFIGURATION C</span>
+              <span class="text-sm text-slate-700">A sealed jar with 10 mice and no plants, kept in a warm sunlit room.</span>
+            </button>
+            <button onclick="submitGameChoice(4, 'D')" class="game-btn p-4 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-white hover:bg-brand-50/50 text-left transition-all">
+              <span class="font-bold text-xs text-slate-500 block mb-1">CONFIGURATION D</span>
+              <span class="text-sm text-slate-700">Only plants inside a pitch-black box with no light ever entering.</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Victory Banner Screen (Hidden initially) -->
+        <div id="gameVictoryScreen" class="hidden text-center py-10 space-y-4">
+          <div class="text-7xl animate-bounce">🏆🎉🌿</div>
+          <h3 class="text-3xl font-black text-brand-700 font-display">Eco-Dome Fully Restored!</h3>
+          <p class="text-sm text-slate-600 max-w-lg mx-auto">
+            Outstanding scientific problem-solving! You applied Priestley's closed system discoveries, optimized photonic bubble rates, 
+            and proved the chemical transformation of radiant light into life-giving oxygen and glucose!
+          </p>
+          <div class="inline-block bg-brand-50 border border-brand-200 px-4 py-2 rounded-2xl text-brand-800 font-mono font-bold text-sm">
+            +200 XP Awarded! All 4 Science Artifacts Collected.
+          </div>
+          <div>
+            <button onclick="resetGame()" class="py-2.5 px-6 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs transition-all">
+              Play Quest Again
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Game Feedback Box -->
+        <div id="gameFeedbackBar" class="mt-4 p-3 rounded-xl border text-xs font-semibold hidden">
+          <!-- Text inserted via JS -->
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 5: CHECK FOR UNDERSTANDING & CER BUILDER -->
+    <!-- ========================================================================= -->
+    <section id="quizTab" class="tab-content hidden space-y-6">
+      
+      <!-- Quiz Header Banner -->
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-6 sm:p-8 text-white shadow-lg">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide mb-2">
+            <span>📝 Day 2 Summative Mastery Check</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-display">
+            TN 7.LS1.7 Check For Understanding
+          </h2>
+          <p class="text-blue-100 text-sm mt-1">
+            Test your knowledge of closed systems, Priestley's findings, and chemical indicators. Includes instant feedback and a guided CER paragraph builder!
+          </p>
+        </div>
+      </div>
+
+      <!-- Multiple Choice Questions from Scope 7 Materials -->
+      <div class="space-y-4" id="quizQuestionContainer">
+        
+        <!-- Question 1 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3" id="qCard-1">
+          <div class="flex justify-between items-center text-xs font-bold">
+            <span class="text-brand-700 uppercase tracking-wider">Question 1 of 4</span>
+            <span class="text-slate-400">TN 7.LS1.7 Standard</span>
+          </div>
+          <p class="font-bold text-slate-800 text-sm sm:text-base">
+            In Joseph Priestley’s 1772 bell jar experiment, why did placing a mint plant inside a sealed glass dome allow a mouse to survive?
+          </p>
+          <div class="space-y-2 text-xs sm:text-sm">
+            <label onclick="checkQuizAnswer(1, 'A', true)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q1" class="mr-3 accent-brand-600">
+              <span><strong>A)</strong> The plant absorbed CO₂ released by the mouse and produced fresh O₂ gas through photosynthesis.</span>
+            </label>
+            <label onclick="checkQuizAnswer(1, 'B', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q1" class="mr-3 accent-brand-600">
+              <span><strong>B)</strong> The plant absorbed oxygen gas and converted it into water droplets for the mouse to drink.</span>
+            </label>
+            <label onclick="checkQuizAnswer(1, 'C', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q1" class="mr-3 accent-brand-600">
+              <span><strong>C)</strong> The plant shaded the mouse from radiant heat so the mouse would not get too hot.</span>
+            </label>
+            <label onclick="checkQuizAnswer(1, 'D', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q1" class="mr-3 accent-brand-600">
+              <span><strong>D)</strong> The plant consumed all gases inside the jar to create a complete vacuum.</span>
+            </label>
+          </div>
+          <div id="qFeedback-1" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3" id="qCard-2">
+          <div class="flex justify-between items-center text-xs font-bold">
+            <span class="text-brand-700 uppercase tracking-wider">Question 2 of 4</span>
+            <span class="text-slate-400">Quantitative Lab Analysis</span>
+          </div>
+          <p class="font-bold text-slate-800 text-sm sm:text-base">
+            An aquatic plant (<em>Elodea</em>) is placed at varying distances from a desk lamp (10 cm, 30 cm, 50 cm). Which observation provides direct quantitative evidence of the plant's rate of photosynthesis?
+          </p>
+          <div class="space-y-2 text-xs sm:text-sm">
+            <label onclick="checkQuizAnswer(2, 'A', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q2" class="mr-3 accent-brand-600">
+              <span><strong>A)</strong> The change in water temperature in the beaker.</span>
+            </label>
+            <label onclick="checkQuizAnswer(2, 'B', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q2" class="mr-3 accent-brand-600">
+              <span><strong>B)</strong> The weight of the desk lamp fixture after 30 minutes.</span>
+            </label>
+            <label onclick="checkQuizAnswer(2, 'C', true)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q2" class="mr-3 accent-brand-600">
+              <span><strong>C)</strong> The number of oxygen gas bubbles released per minute from the cut stem.</span>
+            </label>
+            <label onclick="checkQuizAnswer(2, 'D', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q2" class="mr-3 accent-brand-600">
+              <span><strong>D)</strong> The volume of water that evaporates into the classroom air.</span>
+            </label>
+          </div>
+          <div id="qFeedback-2" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3" id="qCard-3">
+          <div class="flex justify-between items-center text-xs font-bold">
+            <span class="text-brand-700 uppercase tracking-wider">Question 3 of 4</span>
+            <span class="text-slate-400">Chemical Indicators</span>
+          </div>
+          <p class="font-bold text-slate-800 text-sm sm:text-base">
+            Fehling's solution is added to an extract of plant leaves kept in sunlight, and the mixture is heated in a water bath. A brick-red precipitate forms. What does this confirm?
+          </p>
+          <div class="space-y-2 text-xs sm:text-sm">
+            <label onclick="checkQuizAnswer(3, 'A', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q3" class="mr-3 accent-brand-600">
+              <span><strong>A)</strong> That carbon dioxide gas was released by the leaves.</span>
+            </label>
+            <label onclick="checkQuizAnswer(3, 'B', true)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q3" class="mr-3 accent-brand-600">
+              <span><strong>B)</strong> The presence of reducing sugars like glucose produced during photosynthesis.</span>
+            </label>
+            <label onclick="checkQuizAnswer(3, 'C', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q3" class="mr-3 accent-brand-600">
+              <span><strong>C)</strong> That all chlorophyll pigments were destroyed by sunlight.</span>
+            </label>
+            <label onclick="checkQuizAnswer(3, 'D', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q3" class="mr-3 accent-brand-600">
+              <span><strong>D)</strong> That the plant was placed in total darkness.</span>
+            </label>
+          </div>
+          <div id="qFeedback-3" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3" id="qCard-4">
+          <div class="flex justify-between items-center text-xs font-bold">
+            <span class="text-brand-700 uppercase tracking-wider">Question 4 of 4</span>
+            <span class="text-slate-400">Closed System Prediction</span>
+          </div>
+          <p class="font-bold text-slate-800 text-sm sm:text-base">
+            In a sealed glass jar containing only an aquatic plant placed inside a <strong>pitch-black dark closet</strong> for 24 hours, what will happen to the level of dissolved oxygen?
+          </p>
+          <div class="space-y-2 text-xs sm:text-sm">
+            <label onclick="checkQuizAnswer(4, 'A', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q4" class="mr-3 accent-brand-600">
+              <span><strong>A)</strong> Oxygen will increase because plants produce oxygen even without light.</span>
+            </label>
+            <label onclick="checkQuizAnswer(4, 'B', true)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q4" class="mr-3 accent-brand-600">
+              <span><strong>B)</strong> Oxygen will decrease because without light, photosynthesis halts and the plant consumes O₂ via cellular respiration.</span>
+            </label>
+            <label onclick="checkQuizAnswer(4, 'C', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q4" class="mr-3 accent-brand-600">
+              <span><strong>C)</strong> Oxygen levels will remain exactly identical forever.</span>
+            </label>
+            <label onclick="checkQuizAnswer(4, 'D', false)" class="quiz-opt flex items-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+              <input type="radio" name="q4" class="mr-3 accent-brand-600">
+              <span><strong>D)</strong> The plant will produce hydrogen gas instead of oxygen.</span>
+            </label>
+          </div>
+          <div id="qFeedback-4" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+        </div>
+
+      </div>
+
+      <!-- Guided CER Paragraph Builder (STEMscopes Day 2 standard task) -->
+      <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-5">
+        <div class="border-l-4 border-indigo-600 pl-3">
+          <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider">Scientific Argumentation</span>
+          <h3 class="text-xl font-black text-slate-800 font-display">Claim - Evidence - Reasoning (CER) Builder</h3>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          <strong>Prompt:</strong> <em>"How does exposure to sunlight affect the gas composition inside a sealed closed system containing a plant, and what chemical evidence proves this transformation?"</em>
+        </p>
+
+        <!-- Claim Select -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-700">1. Select Your Scientific Claim:</label>
+          <select id="cerClaimSelect" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:border-brand-500 focus:outline-none">
+            <option value="">-- Choose Claim --</option>
+            <option value="Exposure to sunlight causes the plant to consume carbon dioxide and produce oxygen, actively converting radiant energy into stored chemical energy.">Exposure to sunlight causes the plant to consume carbon dioxide and produce oxygen, actively converting radiant energy into stored chemical energy.</option>
+            <option value="Sunlight causes plants to emit carbon dioxide gas while removing oxygen from the sealed chamber.">Sunlight causes plants to emit carbon dioxide gas while removing oxygen from the sealed chamber.</option>
+          </select>
+        </div>
+
+        <!-- Evidence Select -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-700">2. Select Your Specific Lab Evidence:</label>
+          <select id="cerEvidenceSelect" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:border-brand-500 focus:outline-none">
+            <option value="">-- Choose Evidence --</option>
+            <option value="This is supported by Elodea bubbling oxygen bubbles faster (48 bpm) closer to light, limewater clearing up as CO₂ is absorbed, and Fehling's solution forming a brick-red precipitate confirming glucose.">This is supported by Elodea bubbling oxygen bubbles faster (48 bpm) closer to light, limewater clearing up as CO₂ is absorbed, and Fehling's solution forming a brick-red precipitate confirming glucose.</option>
+            <option value="This is proven because the water in the beaker gets colder whenever the lamp is turned on.">This is proven because the water in the beaker gets colder whenever the lamp is turned on.</option>
+          </select>
+        </div>
+
+        <!-- Reasoning Select -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-700">3. Select Your Scientific Reasoning:</label>
+          <select id="cerReasoningSelect" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:border-brand-500 focus:outline-none">
+            <option value="">-- Choose Reasoning --</option>
+            <option value="Because chlorophyll in chloroplasts absorbs solar light photons to drive the reaction (6CO₂ + 6H₂O ➔ C₆H₁₂O₆ + 6O₂), light is the essential energy input that rearranges reactant atoms into life-sustaining products in a closed system.">Because chlorophyll in chloroplasts absorbs solar light photons to drive the reaction (6CO₂ + 6H₂O ➔ C₆H₁₂O₆ + 6O₂), light is the essential energy input that rearranges reactant atoms into life-sustaining products in a closed system.</option>
+            <option value="Because mice naturally like to sleep near mint leaves when it is sunny outside.">Because mice naturally like to sleep near mint leaves when it is sunny outside.</option>
+          </select>
+        </div>
+
+        <!-- Assemble Button & Preview -->
+        <button onclick="assembleCERParagraph()" class="py-2.5 px-5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md transition-all">
+          ✨ Assemble Complete CER Paragraph
+        </button>
+
+        <!-- Final CER Preview Box -->
+        <div id="cerOutputBox" class="hidden p-4 rounded-2xl bg-indigo-50 border border-indigo-200 text-xs sm:text-sm text-indigo-950 space-y-2">
+          <div class="font-extrabold text-indigo-900 uppercase tracking-wider text-[11px]">Your Formatted CER Scientific Argument:</div>
+          <p id="cerParagraphText" class="leading-relaxed italic"></p>
+          <button onclick="copyCERToClipboard()" class="mt-2 text-xs font-bold text-indigo-700 hover:text-indigo-900 underline flex items-center gap-1">
+            📋 Copy to Science Notebook Clipboard
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-slate-500 text-xs text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        <strong>Tennessee Academic Standards for Science:</strong> Grade 7 | <em>TN 7.LS1.7</em> Photosynthesis Chemical Transformations
+      </div>
+      <div>
+        Accelerate Learning STEMscopes Aligned • Scope 7: Day 2 Block Plan
+      </div>
+    </div>
+  </footer>
+
+  <!-- Notification Banner / Modal Toast -->
+  <div id="customToast" class="fixed bottom-6 right-6 max-w-sm bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
+    <span id="toastIcon" class="text-xl">⭐</span>
+    <div id="toastMessage" class="text-xs font-semibold">Toast message</div>
+  </div>
+
+  <script>
+    /* ========================================================================= */
+    /* GLOBAL STATE & SOUND SYNTHESIS                                            */
+    /* ========================================================================= */
+    let globalXP = 0;
+    let audioEnabled = true;
+    let synth = null;
+
+    // Initialize Tone.js synth on first interaction
+    function getSynth() {
+      if (!synth && typeof Tone !== 'undefined') {
+        try {
+          synth = new Tone.PolySynth(Tone.Synth).toDestination();
+          synth.volume.value = -10;
+        } catch(e) {
+          console.log("AudioContext blocked or waiting user gesture");
+        }
+      }
+      return synth;
+    }
+
+    function playSound(type) {
+      if (!audioEnabled) return;
+      try {
+        const s = getSynth();
+        if (!s) return;
+        if (Tone.context.state !== 'running') {
+          Tone.start();
+        }
+        if (type === 'pop') {
+          s.triggerAttackRelease("C6", "16n");
+        } else if (type === 'success') {
+          s.triggerAttackRelease(["E5", "G5", "C6"], "8n");
+        } else if (type === 'error') {
+          s.triggerAttackRelease("D3", "8n");
+        } else if (type === 'click') {
+          s.triggerAttackRelease("A4", "32n");
+        }
+      } catch (e) {
+        // audio fallback safely
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const icon = document.getElementById('soundIcon');
+      const label = document.getElementById('soundLabel');
+      if (audioEnabled) {
+        icon.textContent = '🔊';
+        label.textContent = 'Sound: ON';
+        showToast('Sound effects enabled! 🎵', '🔊');
+      } else {
+        icon.textContent = '🔇';
+        label.textContent = 'Sound: OFF';
+        showToast('Sound muted', '🔇');
+      }
+    }
+
+    function addXP(amount, reason) {
+      globalXP += amount;
+      document.getElementById('globalScoreText').textContent = `${globalXP} / 500 XP`;
+      playSound('success');
+      showToast(`+${amount} XP: ${reason}! ⭐`, '⭐');
+
+      if (typeof confetti === 'function' && amount >= 50) {
+        confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
+      }
+    }
+
+    function showToast(msg, icon = 'ℹ️') {
+      const toast = document.getElementById('customToast');
+      document.getElementById('toastIcon').textContent = icon;
+      document.getElementById('toastMessage').textContent = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 3500);
+    }
+
+    function switchTab(tabId) {
+      playSound('click');
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('text-brand-700', 'bg-brand-50', 'border-brand-200');
+        btn.classList.add('hover:bg-slate-100');
+      });
+
+      const activeContent = document.getElementById(tabId);
+      if (activeContent) activeContent.classList.remove('hidden');
+
+      const activeBtn = document.getElementById('tabBtn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('text-brand-700', 'bg-brand-50', 'border', 'border-brand-200');
+        activeBtn.classList.remove('hover:bg-slate-100');
+      }
+    }
+
+    function switchLabStation(stationNum) {
+      playSound('click');
+      document.querySelectorAll('.lab-station-view').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.station-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-600', 'text-white');
+        btn.classList.add('bg-slate-100', 'text-slate-700');
+      });
+
+      const active = document.getElementById(`labStation-${stationNum}`);
+      if (active) active.classList.remove('hidden');
+
+      const btn = document.getElementById(`stationBtn-${stationNum}`);
+      if (btn) {
+        btn.classList.remove('bg-slate-100', 'text-slate-700');
+        btn.classList.add('bg-brand-600', 'text-white');
+      }
+    }
+
+    let priestleyConfig = 'candle';
+    let priestleyHasLight = true;
+    let priestleyInterval = null;
+
+    function setPriestleyJar(type) {
+      playSound('click');
+      priestleyConfig = type;
+
+      // Update button styling
+      document.querySelectorAll('.jar-choice-btn').forEach(b => {
+        b.className = 'jar-choice-btn py-2 px-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 text-center transition-all';
+      });
+      const activeBtn = document.getElementById(`btnJar-${type}`);
+      if (activeBtn) {
+        activeBtn.className = 'jar-choice-btn py-2 px-3 rounded-lg border-2 border-brand-500 bg-brand-50 text-xs font-bold text-brand-800 text-center transition-all';
+      }
+
+      resetPriestleySim();
+
+      const candleEl = document.getElementById('jarItem-candle');
+      const mouseEl = document.getElementById('jarItem-mouse');
+      const plantEl = document.getElementById('jarItem-plant');
+
+      candleEl.classList.add('hidden');
+      mouseEl.classList.add('hidden');
+      plantEl.classList.add('hidden');
+
+      if (type === 'candle') {
+        candleEl.classList.remove('hidden');
+        document.getElementById('candleFlame').classList.remove('opacity-0');
+        document.getElementById('priestleyOutputText').innerHTML = '🕯️ <strong>Scenario 1: Candle alone.</strong> Fire requires oxygen. Without plants to replenish O₂, watch what happens.';
+      } else if (type === 'mouse') {
+        mouseEl.classList.remove('hidden');
+        document.getElementById('mouseGraphic').textContent = '🐭';
+        document.getElementById('mouseStatusTag').textContent = 'Breathing normally';
+        document.getElementById('mouseStatusTag').className = 'text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full mt-1';
+        document.getElementById('priestleyOutputText').innerHTML = '🐭 <strong>Scenario 2: Mouse alone.</strong> Animals inhale O₂ and exhale CO₂. Without gas recycling, oxygen depletes!';
+      } else if (type === 'combo') {
+        mouseEl.classList.remove('hidden');
+        plantEl.classList.remove('hidden');
+        document.getElementById('mouseGraphic').textContent = '🐭';
+        document.getElementById('mouseStatusTag').textContent = 'Breathing normally';
+        document.getElementById('mouseStatusTag').className = 'text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full mt-1';
+        document.getElementById('priestleyOutputText').innerHTML = '🌱🐭 <strong>Scenario 3: Plant + Mouse.</strong> Two organisms in a closed system. Will the plant recycle the mouse\'s "injured air"?';
+      }
+    }
+
+    function togglePriestleyLight() {
+      priestleyHasLight = document.getElementById('priestleyLightToggle').checked;
+      const beam = document.getElementById('sunbeamOverlay');
+      if (priestleyHasLight) {
+        beam.classList.remove('opacity-0');
+        playSound('pop');
+      } else {
+        beam.classList.add('opacity-0');
+        playSound('click');
+      }
+    }
+
+    function runPriestleySim() {
+      clearInterval(priestleyInterval);
+      playSound('pop');
+
+      let step = 0;
+      let o2 = 21.0;
+      let co2 = 0.04;
+
+      const o2Val = document.getElementById('o2GaugeVal');
+      const o2Bar = document.getElementById('o2GaugeBar');
+      const co2Val = document.getElementById('co2GaugeVal');
+      const co2Bar = document.getElementById('co2GaugeBar');
+      const outText = document.getElementById('priestleyOutputText');
+
+      priestleyInterval = setInterval(() => {
+        step++;
+
+        if (priestleyConfig === 'candle') {
+          o2 = Math.max(0, o2 - 1.5);
+          co2 = Math.min(6.0, co2 + 0.4);
+          if (o2 <= 4.0) {
+            document.getElementById('candleFlame').classList.add('opacity-0');
+            clearInterval(priestleyInterval);
+            outText.innerHTML = '🛑 <strong>Flame Extinguished!</strong> In 1772 Priestley observed the flame going out because combustion consumed all available oxygen.';
+            addXP(20, 'Observed closed-system combustion');
+          }
+        } else if (priestleyConfig === 'mouse') {
+          o2 = Math.max(0, o2 - 1.2);
+          co2 = Math.min(8.0, co2 + 0.5);
+          if (o2 <= 5.0) {
+            document.getElementById('mouseGraphic').textContent = '😵';
+            document.getElementById('mouseStatusTag').textContent = 'Suffocated (No O₂)';
+            document.getElementById('mouseStatusTag').className = 'text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-full mt-1';
+            clearInterval(priestleyInterval);
+            outText.innerHTML = '⚠️ <strong>Oxygen Depleted!</strong> Without a plant to produce O₂, the mouse suffocates from lack of breathable air.';
+            addXP(20, 'Observed animal respiration in closed system');
+          }
+        } else if (priestleyConfig === 'combo') {
+          if (priestleyHasLight) {
+            // Balanced equilibrium!
+            o2 = 21.0 + Math.sin(step * 0.2) * 0.4;
+            co2 = 0.04 + Math.cos(step * 0.2) * 0.02;
+            if (step >= 15) {
+              clearInterval(priestleyInterval);
+              outText.innerHTML = '🎉 <strong>Sustainable Equilibrium!</strong> The mint plant absorbs the mouse\'s CO₂ and uses sunlight to produce fresh O₂! Both survive.';
+              addXP(40, 'Balanced Priestley Closed System');
+            }
+          } else {
+            // Dark! Plant only respires!
+            o2 = Math.max(0, o2 - 1.8);
+            co2 = Math.min(9.0, co2 + 0.6);
+            if (o2 <= 5.0) {
+              document.getElementById('mouseGraphic').textContent = '😵';
+              document.getElementById('plantGraphic').textContent = '🥀';
+              document.getElementById('mouseStatusTag').textContent = 'Depleted O₂';
+              document.getElementById('mouseStatusTag').className = 'text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-full mt-1';
+              clearInterval(priestleyInterval);
+              outText.innerHTML = '🌑 <strong>Darkness Shuts Down Photosynthesis!</strong> Without radiant energy, plants cannot produce oxygen and must respire too. Both ran out of oxygen!';
+              addXP(25, 'Discovered light requirement');
+            }
+          }
+        }
+
+        // Update Gauges
+        o2Val.textContent = o2.toFixed(1) + '%';
+        o2Bar.style.width = `${Math.min(100, (o2 / 25) * 100)}%`;
+        co2Val.textContent = co2.toFixed(2) + '%';
+        co2Bar.style.width = `${Math.min(100, (co2 / 8) * 100)}%`;
+
+      }, 200);
+    }
+
+    function resetPriestleySim() {
+      clearInterval(priestleyInterval);
+      document.getElementById('o2GaugeVal').textContent = '21.0%';
+      document.getElementById('o2GaugeBar').style.width = '70%';
+      document.getElementById('co2GaugeVal').textContent = '0.04%';
+      document.getElementById('co2GaugeBar').style.width = '15%';
+      document.getElementById('candleFlame').classList.remove('opacity-0');
+      document.getElementById('mouseGraphic').textContent = '🐭';
+      document.getElementById('plantGraphic').textContent = '🪴';
+      document.getElementById('mouseStatusTag').textContent = 'Breathing normally';
+      document.getElementById('mouseStatusTag').className = 'text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full mt-1';
+    }
+
+    let elodeaDistance = 10;
+    let elodeaBubbleCount = 0;
+    let elodeaTimer = null;
+    let bubbleSpawnsInterval = null;
+
+    function updateElodeaDistance(dist) {
+      elodeaDistance = parseInt(dist);
+      const display = document.getElementById('lampDistanceDisplay');
+      const rateText = document.getElementById('bubbleRateExpected');
+      const deskLamp = document.getElementById('deskLampContainer');
+
+      // Adjust lamp horizontal position
+      deskLamp.style.left = `${Math.max(10, 80 - (dist * 1.1))}px`;
+
+      let expectedBpm = 48;
+      let label = 'High Light';
+      if (dist <= 20) {
+        expectedBpm = Math.round(48 - (dist - 10) * 0.8);
+        label = 'High Light';
+      } else if (dist <= 40) {
+        expectedBpm = Math.round(35 - (dist - 20) * 0.7);
+        label = 'Medium Light';
+      } else {
+        expectedBpm = Math.round(18 - (dist - 40) * 0.4);
+        label = 'Dim Light';
+      }
+
+      display.textContent = `${dist} cm (${label})`;
+      rateText.textContent = `~${expectedBpm} bpm`;
+      playSound('click');
+    }
+
+    function spawnBubble() {
+      const container = document.getElementById('elodeaBubbleStream');
+      const bubble = document.createElement('div');
+      bubble.className = 'absolute w-3 h-3 bg-cyan-200/80 rounded-full border border-white shadow-xs animate-float-bubble pointer-events-none';
+      bubble.style.left = `${45 + (Math.random() * 10 - 5)}%`;
+      bubble.style.bottom = '20px';
+      bubble.style.transition = 'all 1.2s linear';
+      container.appendChild(bubble);
+
+      playSound('pop');
+
+      setTimeout(() => {
+        bubble.style.bottom = '180px';
+        bubble.style.opacity = '0';
+      }, 50);
+
+      setTimeout(() => {
+        bubble.remove();
+        elodeaBubbleCount++;
+        document.getElementById('bubbleLiveCount').textContent = elodeaBubbleCount;
+        // Increase collected gas pocket slightly
+        const pocket = document.getElementById('collectedGasPocket');
+        const currHeight = parseInt(pocket.style.height || '15');
+        pocket.style.height = `${Math.min(90, currHeight + 1.2)}px`;
+      }, 1200);
+    }
+
+    function startElodeaTimer() {
+      clearInterval(bubbleSpawnsInterval);
+      clearTimeout(elodeaTimer);
+      elodeaBubbleCount = 0;
+      document.getElementById('bubbleLiveCount').textContent = '0';
+      document.getElementById('elodeaTimerBtn').disabled = true;
+      document.getElementById('elodeaTimerBtn').innerHTML = '<span>⏳</span> Counting Bubbles (30s)...';
+
+      // Rate based on distance
+      let intervalMs = 1200;
+      if (elodeaDistance <= 15) intervalMs = 500;
+      else if (elodeaDistance <= 30) intervalMs = 850;
+      else if (elodeaDistance <= 45) intervalMs = 1400;
+      else intervalMs = 2100;
+
+      bubbleSpawnsInterval = setInterval(spawnBubble, intervalMs);
+
+      elodeaTimer = setTimeout(() => {
+        clearInterval(bubbleSpawnsInterval);
+        document.getElementById('elodeaTimerBtn').disabled = false;
+        document.getElementById('elodeaTimerBtn').innerHTML = '<span>⏱️</span> Start 30-Second Bubble Run';
+        addXP(30, 'Completed Elodea Photometric Bubbling run');
+        showToast(`Trial completed! Counted ${elodeaBubbleCount} oxygen bubbles!`, '🫧');
+      }, 15000); // 15 sec demo for fast classroom engagement
+    }
+
+    function recordElodeaDataPoint() {
+      const table = document.getElementById('elodeaTableBody');
+      const bpm = elodeaBubbleCount * 4; // extrapolated per minute
+      const row = document.createElement('tr');
+      row.className = 'hover:bg-slate-50 transition-colors';
+      row.innerHTML = `
+        <td class="px-3 py-1.5 font-bold text-slate-700">${elodeaDistance} cm</td>
+        <td class="px-3 py-1.5 text-slate-600 font-sans font-medium">${elodeaDistance <= 20 ? 'High' : (elodeaDistance <= 40 ? 'Medium' : 'Low')}</td>
+        <td class="px-3 py-1.5 text-right font-bold text-sky-700">${bpm > 0 ? bpm : '~' + document.getElementById('bubbleRateExpected').textContent}</td>
+      `;
+      table.appendChild(row);
+      addXP(15, 'Recorded bubble trial into data log');
+    }
+
+    let currentChemicalMode = 'limewater';
+
+    function selectChemicalTest(mode) {
+      playSound('click');
+      currentChemicalMode = mode;
+      const btnLime = document.getElementById('btnTest-limewater');
+      const btnFehl = document.getElementById('btnTest-fehling');
+      const limeControls = document.getElementById('limewaterControls');
+      const fehlControls = document.getElementById('fehlingControls');
+      const burner = document.getElementById('burnerFlame');
+
+      if (mode === 'limewater') {
+        btnLime.className = 'p-3 rounded-xl border-2 border-brand-500 bg-brand-50 text-left transition-all';
+        btnFehl.className = 'p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all';
+        limeControls.classList.remove('hidden');
+        fehlControls.classList.add('hidden');
+        burner.classList.add('hidden');
+        document.getElementById('tubeLabelA').textContent = 'Clear Limewater Control';
+        document.getElementById('tubeLabelB').textContent = 'Sample Gas Reaction Tube';
+        document.getElementById('indicatorResultNotice').innerHTML = '🧪 <strong>Limewater Rule:</strong> Calcium hydroxide solution turns cloudy/milky with a calcium carbonate precipitate in the presence of CO₂ gas.';
+      } else {
+        btnFehl.className = 'p-3 rounded-xl border-2 border-brand-500 bg-brand-50 text-left transition-all';
+        btnLime.className = 'p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all';
+        fehlControls.classList.remove('hidden');
+        limeControls.classList.add('hidden');
+        document.getElementById('tubeLabelA').textContent = 'Standard Blue Fehling\'s Solution';
+        document.getElementById('tubeLabelB').textContent = 'Boiling Leaf Extract Tube';
+        document.getElementById('indicatorResultNotice').innerHTML = '🔥 <strong>Fehling\'s Rule:</strong> Tests for reducing simple sugars (glucose). When heated in a water bath, it shifts from deep blue ➔ green/yellow ➔ brick-red precipitate!';
+      }
+
+      resetTestTubes();
+    }
+
+    function testLimewaterSample(type) {
+      playSound('pop');
+      const liquidB = document.getElementById('tubeLiquidB');
+      const banner = document.getElementById('indicatorConclusionBanner');
+      const statusBadge = document.getElementById('reactionStatusBadge');
+
+      if (type === 'breath') {
+        liquidB.className = 'w-full h-32 rounded-b-full transition-all duration-700 bg-slate-300/90 shadow-inner';
+        statusBadge.textContent = 'Result: Cloudy / Milky Precipitate (+CO₂)';
+        statusBadge.className = 'text-xs font-extrabold text-amber-700 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full';
+        banner.innerHTML = '🗣️ <strong>Human Breath Positive:</strong> Turns milky white due to calcium carbonate precipitate ($CaCO_3$) formed by exhaled CO₂!';
+        addXP(25, 'Demonstrated limewater CO₂ positive reaction');
+      } else if (type === 'plant-sun') {
+        liquidB.className = 'w-full h-32 rounded-b-full transition-all duration-700 bg-sky-100/60 shadow-xs';
+        statusBadge.textContent = 'Result: Remained Clear (-CO₂ Absorbed)';
+        statusBadge.className = 'text-xs font-extrabold text-emerald-700 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full';
+        banner.innerHTML = '🌿 <strong>Plant in Sunlight Negative:</strong> Remains clear! The plant actively pulled CO₂ out of the air for photosynthesis.';
+        addXP(25, 'Proved plant consumes CO₂ in light');
+      }
+    }
+
+    function testFehlingSample(type) {
+      playSound('pop');
+      const liquidB = document.getElementById('tubeLiquidB');
+      const burner = document.getElementById('burnerFlame');
+      const banner = document.getElementById('indicatorConclusionBanner');
+      const statusBadge = document.getElementById('reactionStatusBadge');
+
+      burner.classList.remove('hidden');
+
+      if (type === 'sun-leaf') {
+        liquidB.className = 'w-full h-32 rounded-b-full transition-all duration-1000 bg-amber-500 shadow-inner';
+        setTimeout(() => {
+          liquidB.className = 'w-full h-32 rounded-b-full transition-all duration-1000 bg-red-700 shadow-lg';
+          statusBadge.textContent = 'Positive: Brick-Red Precipitate (Glucose Detected!)';
+          statusBadge.className = 'text-xs font-extrabold text-red-700 bg-red-100 border border-red-300 px-2.5 py-0.5 rounded-full';
+          banner.innerHTML = '☀️ <strong>Sun-Exposed Leaf:</strong> Brick-red precipitate proves reducing sugars (glucose, C₆H₁₂O₆) were actively created through photosynthesis!';
+          addXP(30, 'Verified glucose presence with Fehling test');
+        }, 800);
+      } else if (type === 'dark-leaf') {
+        liquidB.className = 'w-full h-32 rounded-b-full transition-all duration-1000 bg-blue-600';
+        statusBadge.textContent = 'Negative: Stays Royal Blue (No Free Glucose)';
+        statusBadge.className = 'text-xs font-extrabold text-blue-700 bg-blue-100 border border-blue-300 px-2.5 py-0.5 rounded-full';
+        banner.innerHTML = '🌑 <strong>Dark-Closet Leaf:</strong> Solution remains deep blue. Without light energy, glucose production ceased.';
+        addXP(20, 'Observed lack of sugar production in dark');
+      }
+    }
+
+    function resetTestTubes() {
+      const liquidB = document.getElementById('tubeLiquidB');
+      liquidB.className = 'w-full h-32 rounded-b-full transition-all duration-700 bg-sky-200/40';
+      document.getElementById('burnerFlame').classList.add('hidden');
+      document.getElementById('reactionStatusBadge').textContent = 'Status: Ready';
+      document.getElementById('reactionStatusBadge').className = 'text-xs font-extrabold text-blue-700 bg-blue-100 border border-blue-300 px-2.5 py-0.5 rounded-full';
+      document.getElementById('indicatorConclusionBanner').textContent = 'Select a sample above to view molecular reaction & precipitate formation!';
+    }
+
+    let selectedMatchItemKey = null;
+    let selectedMatchElem = null;
+    let matchedCount = 0;
+
+    function selectMatchItem(key, elem) {
+      playSound('click');
+      selectedMatchItemKey = key;
+      selectedMatchElem = elem;
+
+      document.querySelectorAll('.match-item').forEach(el => {
+        el.classList.remove('border-brand-500', 'bg-brand-50');
+      });
+      elem.classList.add('border-brand-500', 'bg-brand-50');
+
+      document.getElementById('matchFeedbackNotice').textContent = `Selected item. Now click the matching scientific proof on the right!`;
+    }
+
+    function checkMatchTarget(targetKey, elem) {
+      if (!selectedMatchItemKey) {
+        showToast('First click an Evidence item on the left!', '⚠️');
+        return;
+      }
+
+      if (selectedMatchItemKey === targetKey) {
+        playSound('success');
+        elem.classList.remove('border-dashed', 'border-slate-300', 'hover:border-brand-500');
+        elem.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900', 'font-bold');
+        elem.innerHTML += ` <span class="text-emerald-600">✓ MATCHED!</span>`;
+        elem.onclick = null;
+
+        selectedMatchElem.classList.remove('border-brand-500', 'bg-brand-50');
+        selectedMatchElem.classList.add('border-emerald-400', 'bg-emerald-100/60', 'text-emerald-900', 'opacity-60');
+        selectedMatchElem.onclick = null;
+
+        matchedCount++;
+        selectedMatchItemKey = null;
+        selectedMatchElem = null;
+
+        document.getElementById('matchFeedbackNotice').textContent = `Correct match! (${matchedCount} of 4 complete)`;
+        addXP(25, 'Correct scientific evidence pairing');
+
+        if (matchedCount === 4) {
+          document.getElementById('matchFeedbackNotice').innerHTML = `🎉 <strong>Mastery Unlocked!</strong> You understand all 4 evidence connections for TN 7.LS1.7!`;
+          addXP(50, 'Mastered Remediation Concept Matcher');
+        }
+      } else {
+        playSound('error');
+        showToast('Not quite! Think about what this specific tool proves.', '❌');
+      }
+    }
+
+    function resetMatchingDrill() {
+      matchedCount = 0;
+      selectedMatchItemKey = null;
+      selectedMatchElem = null;
+      switchTab('remediationTab');
+      // Simple reload of HTML elements
+      const leftCol = document.getElementById('matchingLeftCol');
+      const rightCol = document.getElementById('matchingRightCol');
+      leftCol.innerHTML = `
+        <div onclick="selectMatchItem('priestley', this)" class="match-item p-3 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-slate-50 cursor-pointer text-xs font-semibold text-slate-700 transition-all flex items-center justify-between">
+          <span>🏺 Priestley's Mouse + Mint Jar</span>
+          <span class="text-slate-400 font-mono text-[10px]">#1</span>
+        </div>
+        <div onclick="selectMatchItem('elodea', this)" class="match-item p-3 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-slate-50 cursor-pointer text-xs font-semibold text-slate-700 transition-all flex items-center justify-between">
+          <span>🫧 Counting Elodea Bubbles per Minute</span>
+          <span class="text-slate-400 font-mono text-[10px]">#2</span>
+        </div>
+        <div onclick="selectMatchItem('limewater', this)" class="match-item p-3 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-slate-50 cursor-pointer text-xs font-semibold text-slate-700 transition-all flex items-center justify-between">
+          <span>🥛 Limewater Solution clears near plant</span>
+          <span class="text-slate-400 font-mono text-[10px]">#3</span>
+        </div>
+        <div onclick="selectMatchItem('fehling', this)" class="match-item p-3 rounded-xl border-2 border-slate-200 hover:border-brand-500 bg-slate-50 cursor-pointer text-xs font-semibold text-slate-700 transition-all flex items-center justify-between">
+          <span>🔥 Fehling's heated leaf turns brick-red</span>
+          <span class="text-slate-400 font-mono text-[10px]">#4</span>
+        </div>
+      `;
+      rightCol.innerHTML = `
+        <div onclick="checkMatchTarget('elodea', this)" class="target-item p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white cursor-pointer text-xs text-slate-600 transition-all">
+          Provides direct quantitative data of oxygen gas release rate under light.
+        </div>
+        <div onclick="checkMatchTarget('fehling', this)" class="target-item p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white cursor-pointer text-xs text-slate-600 transition-all">
+          Confirms the presence of synthesized glucose sugars (stored chemical energy).
+        </div>
+        <div onclick="checkMatchTarget('priestley', this)" class="target-item p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white cursor-pointer text-xs text-slate-600 transition-all">
+          Proves plants restore injured air by replacing consumed oxygen in a closed system.
+        </div>
+        <div onclick="checkMatchTarget('limewater', this)" class="target-item p-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white cursor-pointer text-xs text-slate-600 transition-all">
+          Demonstrates that active photosynthesizing plants consume carbon dioxide gas.
+        </div>
+      `;
+      document.getElementById('matchFeedbackNotice').textContent = 'Click an item on the left to begin matching!';
+    }
+
+    function updateHabitatParams() {
+      const crew = parseInt(document.getElementById('crewSlider').value);
+      const algae = parseInt(document.getElementById('algaeSlider').value);
+      const light = parseInt(document.getElementById('growLightSlider').value);
+
+      document.getElementById('crewSizeVal').textContent = `${crew} Astronaut${crew > 1 ? 's' : ''}`;
+      document.getElementById('algaeTraysVal').textContent = `${algae} Units`;
+      document.getElementById('growLightVal').textContent = `${light}% Intensity`;
+
+      // Visual updates
+      document.getElementById('domeCrewIcons').textContent = '👨‍🚀'.repeat(crew);
+      document.getElementById('domePlantIcons').textContent = '🌿'.repeat(Math.min(6, algae));
+
+      // Calculations:
+      // O2 generated = algae * (light / 100) * 1.5
+      // O2 consumed = crew * 2.0
+      const genRate = algae * (light / 100) * 1.5;
+      const conRate = crew * 2.0;
+      const ratio = genRate / conRate;
+
+      const statusBox = document.getElementById('habitatStatusBox');
+      const o2Val = document.getElementById('habitatO2Val');
+      const co2Val = document.getElementById('habitatCO2Val');
+
+      if (ratio >= 0.9 && ratio <= 1.3) {
+        statusBox.className = 'p-3.5 rounded-xl border text-xs font-medium space-y-1 bg-emerald-50 border-emerald-200 text-emerald-950';
+        statusBox.innerHTML = `
+          <div class="font-bold text-emerald-800 flex items-center gap-1.5"><span>✅</span> Stable Closed-Loop Equilibrium</div>
+          <p>Oxygen production (${genRate.toFixed(1)} kg/day) meets crew respiration needs (${conRate.toFixed(1)} kg/day)!</p>
+        `;
+        o2Val.textContent = '20.9%';
+        co2Val.textContent = '0.04%';
+      } else if (ratio < 0.9) {
+        statusBox.className = 'p-3.5 rounded-xl border text-xs font-medium space-y-1 bg-red-50 border-red-200 text-red-950';
+        statusBox.innerHTML = `
+          <div class="font-bold text-red-800 flex items-center gap-1.5"><span>⚠️</span> Hypoxic Deficit!</div>
+          <p>Not enough radiant energy or algae! Oxygen is dropping below safe breathing thresholds.</p>
+        `;
+        o2Val.textContent = '14.2%';
+        co2Val.textContent = '1.80%';
+      } else {
+        statusBox.className = 'p-3.5 rounded-xl border text-xs font-medium space-y-1 bg-amber-50 border-amber-200 text-amber-950';
+        statusBox.innerHTML = `
+          <div class="font-bold text-amber-800 flex items-center gap-1.5"><span>⚡</span> Hyperoxic Surplus</div>
+          <p>Algae is producing excess oxygen; consider harvesting biomass for astronaut food ration packs!</p>
+        `;
+        o2Val.textContent = '25.4%';
+        co2Val.textContent = '0.01%';
+      }
+    }
+
+    function awardEnrichmentBadge() {
+      const crew = parseInt(document.getElementById('crewSlider').value);
+      const algae = parseInt(document.getElementById('algaeSlider').value);
+      const light = parseInt(document.getElementById('growLightSlider').value);
+      const ratio = (algae * (light / 100) * 1.5) / (crew * 2.0);
+
+      if (ratio >= 0.9 && ratio <= 1.3) {
+        addXP(100, 'Engineered NASA Mars Bioregenerative Equilibrium');
+        document.getElementById('enrichmentClaimBtn').disabled = true;
+        document.getElementById('enrichmentClaimBtn').textContent = '✅ Verified NASA Life Support Certified';
+      } else {
+        playSound('error');
+        showToast('Tune your sliders until you achieve a stable equilibrium first!', '⚠️');
+      }
+    }
+
+    let currentLevel = 1;
+    let domeStability = 100;
+
+    function submitGameChoice(level, choice) {
+      const feedbackBar = document.getElementById('gameFeedbackBar');
+      feedbackBar.classList.remove('hidden');
+
+      if (level === 1) {
+        if (choice === 'A') {
+          playSound('success');
+          document.getElementById('badgePriestley').classList.remove('opacity-30', 'grayscale');
+          feedbackBar.className = 'mt-4 p-3 rounded-xl border text-xs font-semibold bg-emerald-50 border-emerald-200 text-emerald-900';
+          feedbackBar.innerHTML = '✨ <strong>Success!</strong> Just like Priestley in 1772, the mint plant converted radiant sunlight into fresh oxygen, reviving the mouse!';
+          addXP(40, 'Priestley Chamber Complete');
+          setTimeout(() => advanceGameLevel(2), 1500);
+        } else {
+          playSound('error');
+          damageDome(25, 'That action consumed remaining oxygen or blocked photosynthesis!');
+        }
+      } else if (level === 2) {
+        if (choice === 'A') {
+          playSound('success');
+          document.getElementById('badgeElodea').classList.remove('opacity-30', 'grayscale');
+          feedbackBar.className = 'mt-4 p-3 rounded-xl border text-xs font-semibold bg-emerald-50 border-emerald-200 text-emerald-900';
+          feedbackBar.innerHTML = '✨ <strong>Oxygen Pressure Restored!</strong> Bringing the lamp closer increased radiant energy photon capture, driving bubble production to 48 bpm!';
+          addXP(40, 'Elodea Hydro-Canal Complete');
+          setTimeout(() => advanceGameLevel(3), 1500);
+        } else {
+          playSound('error');
+          damageDome(25, 'Moving the light away or turning it off slowed oxygen production!');
+        }
+      } else if (level === 3) {
+        if (choice === 'A') {
+          playSound('success');
+          document.getElementById('badgeLimewater').classList.remove('opacity-30', 'grayscale');
+          document.getElementById('badgeFehling').classList.remove('opacity-30', 'grayscale');
+          feedbackBar.className = 'mt-4 p-3 rounded-xl border text-xs font-semibold bg-emerald-50 border-emerald-200 text-emerald-900';
+          feedbackBar.innerHTML = '✨ <strong>Chemical Credentials Verified!</strong> Clear limewater confirmed CO₂ consumption, and brick-red Fehling\'s proved glucose was synthesized!';
+          addXP(40, 'Chemical Crypt Passed');
+          setTimeout(() => advanceGameLevel(4), 1500);
+        } else {
+          playSound('error');
+          damageDome(25, 'Incorrect chemical indicator interpretation!');
+        }
+      } else if (level === 4) {
+        if (choice === 'A') {
+          playSound('success');
+          feedbackBar.classList.add('hidden');
+          document.querySelectorAll('.game-level-view').forEach(el => el.classList.add('hidden'));
+          document.getElementById('gameVictoryScreen').classList.remove('hidden');
+          document.getElementById('gameChamberBadge').textContent = 'Mission Accomplished! 🏆';
+          addXP(80, 'Restored Biosphere 72 Equilibrium');
+          confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
+        } else {
+          playSound('error');
+          damageDome(25, 'Closed systems require both autotrophic producers and light energy to cycle matter!');
+        }
+      }
+    }
+
+    function damageDome(amount, reason) {
+      domeStability = Math.max(10, domeStability - amount);
+      document.getElementById('gameStabilityText').textContent = `${domeStability}%`;
+      document.getElementById('gameStabilityBar').style.width = `${domeStability}%`;
+      const feedbackBar = document.getElementById('gameFeedbackBar');
+      feedbackBar.className = 'mt-4 p-3 rounded-xl border text-xs font-semibold bg-red-50 border-red-200 text-red-900';
+      feedbackBar.innerHTML = `⚠️ <strong>Dome Integrity Warning:</strong> ${reason}`;
+    }
+
+    function advanceGameLevel(nextLvl) {
+      currentLevel = nextLvl;
+      document.getElementById('gameChamberBadge').textContent = `Chamber ${nextLvl} of 4`;
+      document.querySelectorAll('.game-level-view').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`gameLevel-${nextLvl}`).classList.remove('hidden');
+      document.getElementById('gameFeedbackBar').classList.add('hidden');
+    }
+
+    function resetGame() {
+      currentLevel = 1;
+      domeStability = 100;
+      document.getElementById('gameStabilityText').textContent = '100%';
+      document.getElementById('gameStabilityBar').style.width = '100%';
+      document.getElementById('gameVictoryScreen').classList.add('hidden');
+      document.getElementById('badgePriestley').classList.add('opacity-30', 'grayscale');
+      document.getElementById('badgeElodea').classList.add('opacity-30', 'grayscale');
+      document.getElementById('badgeLimewater').classList.add('opacity-30', 'grayscale');
+      document.getElementById('badgeFehling').classList.add('opacity-30', 'grayscale');
+      advanceGameLevel(1);
+    }
+
+    const quizFeedbackData = {
+      1: {
+        correct: 'A',
+        explanation: 'Standard TN 7.LS1.7: Animals exhale CO₂ and require O₂. The mint plant used sunlight to absorb CO₂ and release fresh O₂, maintaining atmospheric balance in the sealed dome.'
+      },
+      2: {
+        correct: 'C',
+        explanation: 'Oxygen gas is a direct chemical output of photosynthesis. Counting the bubbles per minute as lamp distance varies provides direct quantitative data of reaction rate.'
+      },
+      3: {
+        correct: 'B',
+        explanation: 'Fehling\'s / Benedict\'s solution turns from deep blue to brick-red when heated in the presence of reducing simple sugars like glucose (C₆H₁₂O₆).'
+      },
+      4: {
+        correct: 'B',
+        explanation: 'Without radiant light energy, photosynthesis shuts down! However, the plant is still alive and must perform cellular respiration, consuming oxygen and releasing carbon dioxide until O₂ depletes.'
+      }
+    };
+
+    function checkQuizAnswer(qNum, choice, isCorrect) {
+      const fbBox = document.getElementById(`qFeedback-${qNum}`);
+      fbBox.classList.remove('hidden');
+
+      if (isCorrect) {
+        playSound('success');
+        fbBox.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-50 border border-emerald-200 text-emerald-900 mt-2';
+        fbBox.innerHTML = `✅ <strong>Correct!</strong> ${quizFeedbackData[qNum].explanation}`;
+        addXP(25, `Mastery Question #${qNum}`);
+      } else {
+        playSound('error');
+        fbBox.className = 'p-3 rounded-xl text-xs font-semibold bg-red-50 border border-red-200 text-red-900 mt-2';
+        fbBox.innerHTML = `❌ <strong>Review:</strong> ${quizFeedbackData[qNum].explanation}`;
+      }
+    }
+
+    function assembleCERParagraph() {
+      const claim = document.getElementById('cerClaimSelect').value;
+      const evidence = document.getElementById('cerEvidenceSelect').value;
+      const reasoning = document.getElementById('cerReasoningSelect').value;
+
+      if (!claim || !evidence || !reasoning) {
+        playSound('error');
+        showToast('Please select an option for Claim, Evidence, AND Reasoning!', '⚠️');
+        return;
+      }
+
+      // Check for best scientific combination
+      const isStrong = claim.includes('consume carbon dioxide') && evidence.includes('Elodea bubbling') && reasoning.includes('chlorophyll in chloroplasts');
+
+      const box = document.getElementById('cerOutputBox');
+      const paragraph = document.getElementById('cerParagraphText');
+      box.classList.remove('hidden');
+
+      paragraph.textContent = `"${claim} ${evidence} ${reasoning}"`;
+
+      if (isStrong) {
+        playSound('success');
+        addXP(60, 'Completed High-Mastery CER Scientific Paragraph');
+        showToast('Exemplary 4/4 CER Rubric Paragraph created!', '🏆');
+      } else {
+        playSound('pop');
+        addXP(20, 'Drafted CER paragraph');
+      }
+    }
+
+    function copyCERToClipboard() {
+      const text = document.getElementById('cerParagraphText').textContent;
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+      playSound('click');
+      showToast('CER Paragraph copied to clipboard!', '📋');
+    }
+
+    // Startup window load
+    window.onload = function() {
+      updateHabitatParams();
+      console.log("STEMscopes TN 7.LS1.7 Day 2 App Initialized.");
+    };
+  </script>
+</body>
+</html>
